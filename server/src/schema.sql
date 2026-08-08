@@ -14,3 +14,15 @@ CREATE TABLE IF NOT EXISTS sessions (
   data       TEXT NOT NULL,
   expires_at INTEGER NOT NULL
 );
+
+-- Client profiles (slice 2). photo_url is a link for now; upload could be
+-- added later without changing the column.
+CREATE TABLE IF NOT EXISTS clients (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  name       TEXT NOT NULL,
+  photo_url  TEXT,
+  goals      TEXT,
+  start_date TEXT, -- ISO date YYYY-MM-DD
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);

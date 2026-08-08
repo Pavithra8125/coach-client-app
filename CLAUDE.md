@@ -29,7 +29,7 @@ Full detail: [docs/project-plan.md](docs/project-plan.md).
 
 ## Core features (build order / vertical slices)
 1. Project scaffold (done) + login/auth end-to-end (done)
-2. Client list + add/edit/delete client profiles
+2. Client list + add/edit/delete client profiles (done)
 3. Weight/measurement logging + smoothed trend graph
 4. Workout plan builder + logging + progressive overload view + PR tracker
 5. Diet/macro logging (meal plans, food log, water, supplements)
@@ -47,6 +47,18 @@ Full detail: [docs/project-plan.md](docs/project-plan.md).
   `GET /api/auth/me`. `server/src/middleware/requireAuth.js` guards private routes.
 - Client: `AuthContext` holds session state; `ProtectedRoute` guards pages;
   `/login` is the only public page.
+
+## Clients (slice 2)
+- `clients` table: name, photo_url (a link for now — upload later), goals,
+  start_date (YYYY-MM-DD), timestamps. CRUD in `server/src/routes/clients.js`,
+  all behind `requireAuth`.
+- Client: `ClientList` (dashboard, add/edit/delete modal), `ClientDetail`
+  at `/clients/:id` with placeholder sections for workouts/diet/progress.
+
+## Operational notes
+- The real coach account lives in `server/.env` as `Arun` (seeded by the user).
+  Never delete the DB or the `Arun` user; if test data was added, remove only
+  the exact rows created during verification (e.g. a `coach` test user).
 
 ## How to work on this
 - Build and test **one slice at a time**: run it, click through, report bugs in

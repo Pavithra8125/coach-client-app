@@ -6,6 +6,8 @@ import { config } from './config.js';
 import { db } from './db.js';
 import { SqliteSessionStore } from './sessionStore.js';
 import { authRouter } from './routes/auth.js';
+import { clientsRouter } from './routes/clients.js';
+import { requireAuth } from './middleware/requireAuth.js';
 
 export function createApp() {
   const app = express();
@@ -37,6 +39,9 @@ export function createApp() {
   });
 
   app.use('/api/auth', authRouter);
+
+  // Private routes — everything below requires a logged-in session.
+  app.use('/api/clients', requireAuth, clientsRouter);
 
   return app;
 }

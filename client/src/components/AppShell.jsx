@@ -1,13 +1,17 @@
-// Post-login home. Slice 2 turns this into the client list/dashboard.
+// Shared logged-in layout: header with app title + logout, content below.
+// Every authenticated page renders inside this.
+import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
 
-export default function Dashboard() {
+export default function AppShell({ children }) {
   const { user, logout } = useAuth();
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100">
       <header className="flex items-center justify-between border-b border-slate-800 px-6 py-4">
-        <h1 className="text-lg font-bold">Coach&apos;s Client App</h1>
+        <Link to="/" className="text-lg font-bold transition hover:text-slate-300">
+          Coach&apos;s Client App
+        </Link>
         <div className="flex items-center gap-4">
           <span className="text-sm text-slate-400">
             Signed in as <span className="font-medium text-slate-200">{user.username}</span>
@@ -20,9 +24,7 @@ export default function Dashboard() {
           </button>
         </div>
       </header>
-      <main className="p-6">
-        <p className="text-slate-400">Login works. Next up: client list &amp; add/edit profiles (slice 2).</p>
-      </main>
+      <main className="p-6">{children}</main>
     </div>
   );
 }

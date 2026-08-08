@@ -22,4 +22,5 @@ npm run dev                              # starts Express (port 4000) + Vite (po
 
 ## Status
 
-Slice 1 (login + auth) is done. Next up: slice 2 (client list + add/edit profiles).
+Slices 1 (login + auth) and 2 (client list + add/edit/delete profiles) are done.
+Next up: slice 3 (weight/measurement logging + trend graph).
