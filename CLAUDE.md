@@ -28,7 +28,7 @@ Full detail: [docs/project-plan.md](docs/project-plan.md).
   server/.env` before first run.
 
 ## Core features (build order / vertical slices)
-1. Project scaffold (done) + login/auth end-to-end
+1. Project scaffold (done) + login/auth end-to-end (done)
 2. Client list + add/edit/delete client profiles
 3. Weight/measurement logging + smoothed trend graph
 4. Workout plan builder + logging + progressive overload view + PR tracker
@@ -36,6 +36,17 @@ Full detail: [docs/project-plan.md](docs/project-plan.md).
 6. Weekly check-ins + coach's log notes
 7. Gamification (streaks, badges, milestones)
 8. Personal layer (quote of the day, notes from me, hidden "why" reminder)
+
+## Auth implementation notes (slice 1)
+- Coach account is created by `npm run seed -w server` (username/password from
+  `COACH_USERNAME` / `COACH_PASSWORD` in `server/.env`; idempotent — skips if
+  the user exists). Passwords hashed with bcryptjs (never plain text).
+- Sessions are cookie-based (`coach.sid`, httpOnly, 30-day) and backed by
+  SQLite via `server/src/sessionStore.js`, so logins survive server restarts.
+- Endpoints: `POST /api/auth/login`, `POST /api/auth/logout`,
+  `GET /api/auth/me`. `server/src/middleware/requireAuth.js` guards private routes.
+- Client: `AuthContext` holds session state; `ProtectedRoute` guards pages;
+  `/login` is the only public page.
 
 ## How to work on this
 - Build and test **one slice at a time**: run it, click through, report bugs in

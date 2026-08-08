@@ -1,8 +1,12 @@
 # Pages
 
-Route-level screens, added as build slices land. Planned:
+Route-level screens, one file per page.
 
-- `Login.jsx` — username + password
+**Built so far**
+- `Login.jsx` — username + password (slice 1)
+- `Dashboard.jsx` — post-login home; placeholder until slice 2
+
+**Planned (added as build slices land)**
 - `ClientList.jsx` — dashboard of all clients at a glance
 - `ClientDetail.jsx` — individual client home
 - `WorkoutPlans.jsx` / `WorkoutLog.jsx` / `Progress.jsx` / `Diet.jsx` — per-client

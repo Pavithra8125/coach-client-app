@@ -11,14 +11,15 @@ See [docs/project-plan.md](docs/project-plan.md) for the full plan, and
 ## Quick start
 
 ```bash
-npm install        # installs deps for client + server workspaces
-cp server/.env.example server/.env   # fill in a real SESSION_SECRET
-npm run dev        # starts Express (port 4000) + Vite (port 5173)
+npm install                              # installs deps for client + server workspaces
+cp server/.env.example server/.env       # set SESSION_SECRET + COACH_PASSWORD
+npm run seed -w server                   # creates the coach login account
+npm run dev                              # starts Express (port 4000) + Vite (port 5173)
 ```
 
 - API: http://localhost:4000/api (Vite proxies `/api` → the server)
-- App: http://localhost:5173
+- App: http://localhost:5173 — sign in with the credentials from `server/.env`
 
 ## Status
 
-Scaffold only — no features built yet. Next up: slice 1 (login + auth).
+Slice 1 (login + auth) is done. Next up: slice 2 (client list + add/edit profiles).

@@ -1,17 +1,42 @@
 // Express app wiring. Feature routes get mounted here as they're built —
 // each lives in its own file under src/routes/ (e.g. auth.js, clients.js).
 import express from 'express';
+import session from 'express-session';
 import { config } from './config.js';
+import { db } from './db.js';
+import { SqliteSessionStore } from './sessionStore.js';
+import { authRouter } from './routes/auth.js';
 
 export function createApp() {
   const app = express();
 
   app.use(express.json());
 
-  // Health check — proves the server (and DB, once wired) is up.
+  // Session middleware: SQLite-backed store so logins survive restarts.
+  // saveUninitialized:false — no session cookie until the coach actually logs in.
+  app.use(
+    session({
+      name: 'coach.sid',
+      store: new SqliteSessionStore(db),
+      secret: config.sessionSecret,
+      resave: false,
+      saveUninitialized: false,
+      rolling: true,
+      cookie: {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: config.isProd,
+        maxAge: config.sessionMaxAgeMs,
+      },
+    })
+  );
+
+  // Health check — proves the server (and DB) is up. Public.
   app.get('/api/health', (_req, res) => {
     res.json({ status: 'ok' });
   });
+
+  app.use('/api/auth', authRouter);
 
   return app;
 }
