@@ -11,6 +11,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 function openDb() {
   const db = new Database(config.dbPath);
   db.pragma('journal_mode = WAL');
+  // Enable foreign keys so deleting a client cascades to their entries.
+  db.pragma('foreign_keys = ON');
   db.exec(readFileSync(path.join(__dirname, 'schema.sql'), 'utf8'));
   return db;
 }
