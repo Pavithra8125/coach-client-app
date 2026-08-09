@@ -11,6 +11,8 @@ import { progressRouter } from './routes/progress.js';
 import { exercisesRouter } from './routes/exercises.js';
 import { workoutsRouter } from './routes/workouts.js';
 import { dietRouter } from './routes/diet.js';
+import { checkinsRouter } from './routes/checkins.js';
+import { coachNotesRouter } from './routes/coachNotes.js';
 import { requireAuth } from './middleware/requireAuth.js';
 
 export function createApp() {
@@ -49,6 +51,8 @@ export function createApp() {
   app.use('/api/clients', requireAuth, progressRouter);
   app.use('/api/clients', requireAuth, workoutsRouter);
   app.use('/api/clients', requireAuth, dietRouter);
+  app.use('/api/clients', requireAuth, checkinsRouter);
+  app.use('/api/clients', requireAuth, coachNotesRouter);
   app.use('/api/exercises', requireAuth, exercisesRouter);
 
   return app;

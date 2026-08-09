@@ -172,3 +172,37 @@ CREATE TABLE IF NOT EXISTS supplement_logs (
 CREATE INDEX IF NOT EXISTS idx_food_log_client_date ON food_log_entries (client_id, date);
 CREATE INDEX IF NOT EXISTS idx_water_client_date ON water_logs (client_id, date);
 CREATE INDEX IF NOT EXISTS idx_supplements_client ON supplements (client_id);
+
+-- ---------------------------------------------------------------------------
+-- Check-ins + coach's log (slice 6)
+
+-- Weekly check-in (slice 6). One row per client per date — the coach checks in
+-- each week with ratings (energy/soreness/sleep on a 1-10 scale, diet
+-- adherence as a %) plus any notes. Re-saving a date replaces it (upsert).
+-- Null rating = the coach didn't fill that field that week.
+CREATE TABLE IF NOT EXISTS checkins (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  client_id  INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
+  date       TEXT NOT NULL, -- YYYY-MM-DD (the day the check-in covers)
+  energy     INTEGER, -- 1-10
+  soreness   INTEGER, -- 1-10
+  sleep      INTEGER, -- 1-10
+  adherence  INTEGER, -- 0-100 (%)
+  notes      TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+  UNIQUE (client_id, date)
+);
+
+-- Coach's log (slice 6): private dated journal notes about a client. Only the
+-- coach sees these — they're his observations, not the client's. Newest first.
+CREATE TABLE IF NOT EXISTS coach_notes (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  client_id  INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
+  date       TEXT NOT NULL, -- YYYY-MM-DD (defaults to today when omitted)
+  note       TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_checkins_client_date ON checkins (client_id, date);
+CREATE INDEX IF NOT EXISTS idx_coach_notes_client ON coach_notes (client_id, date);

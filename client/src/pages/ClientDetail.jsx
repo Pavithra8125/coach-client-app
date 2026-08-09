@@ -7,6 +7,7 @@ import ClientFormModal from '../components/ClientFormModal.jsx';
 import ClientProgress from '../components/ClientProgress.jsx';
 import ClientWorkouts from '../components/ClientWorkouts.jsx';
 import ClientDiet from '../components/ClientDiet.jsx';
+import ClientCheckins from '../components/ClientCheckins.jsx';
 import { getClient, deleteClient } from '../api/clients.js';
 
 function initials(name) {
@@ -120,6 +121,8 @@ export default function ClientDetail() {
       <ClientWorkouts clientId={client.id} />
 
       <ClientDiet clientId={client.id} />
+
+      <ClientCheckins clientId={client.id} />
 
       {editing && (
         <ClientFormModal
