@@ -110,3 +110,65 @@ CREATE INDEX IF NOT EXISTS idx_workout_days_client ON workout_days (client_id);
 CREATE INDEX IF NOT EXISTS idx_sessions_client_date ON workout_sessions (client_id, date);
 CREATE INDEX IF NOT EXISTS idx_sets_session ON workout_sets (session_id);
 CREATE INDEX IF NOT EXISTS idx_sets_exercise ON workout_sets (exercise_id);
+
+-- ---------------------------------------------------------------------------
+-- Diet (slice 5)
+
+-- Meal plan: the client's current daily macro targets. One row per client —
+-- re-saving a plan replaces it (upsert). macros in grams, calories in kcal.
+CREATE TABLE IF NOT EXISTS meal_plans (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  client_id  INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
+  name       TEXT, -- e.g. "Cut · 2000 kcal"
+  protein    REAL NOT NULL DEFAULT 0, -- g/day
+  carbs      REAL NOT NULL DEFAULT 0, -- g/day
+  fat        REAL NOT NULL DEFAULT 0, -- g/day
+  calories   INTEGER NOT NULL DEFAULT 0, -- kcal/day
+  notes      TEXT,
+  updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+  UNIQUE (client_id)
+);
+
+-- Daily food log: one row per food item eaten. Date + optional meal label
+-- (breakfast/lunch/dinner/snack…). Macros in grams, calories in kcal.
+CREATE TABLE IF NOT EXISTS food_log_entries (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  client_id  INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
+  date       TEXT NOT NULL, -- YYYY-MM-DD
+  meal_label TEXT,
+  food_name  TEXT NOT NULL,
+  protein    REAL NOT NULL DEFAULT 0, -- g
+  carbs      REAL NOT NULL DEFAULT 0, -- g
+  fat        REAL NOT NULL DEFAULT 0, -- g
+  calories   INTEGER NOT NULL DEFAULT 0, -- kcal
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+-- Water intake: glasses per day, one row per client per day (upsert).
+CREATE TABLE IF NOT EXISTS water_logs (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  client_id  INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
+  date       TEXT NOT NULL, -- YYYY-MM-DD
+  glasses    REAL NOT NULL DEFAULT 0,
+  updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+  UNIQUE (client_id, date)
+);
+
+-- Supplement tracker: the client's supplement list, plus which were taken
+-- on each day (a per-supplement-per-day check).
+CREATE TABLE IF NOT EXISTS supplements (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  client_id  INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
+  name       TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS supplement_logs (
+  supplement_id INTEGER NOT NULL REFERENCES supplements(id) ON DELETE CASCADE,
+  date          TEXT NOT NULL, -- YYYY-MM-DD
+  PRIMARY KEY (supplement_id, date)
+);
+
+CREATE INDEX IF NOT EXISTS idx_food_log_client_date ON food_log_entries (client_id, date);
+CREATE INDEX IF NOT EXISTS idx_water_client_date ON water_logs (client_id, date);
+CREATE INDEX IF NOT EXISTS idx_supplements_client ON supplements (client_id);

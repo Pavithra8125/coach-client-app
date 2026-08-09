@@ -1,11 +1,12 @@
-// Individual client page: profile + the progress section (slice 3), with
-// placeholders for the per-client sections still to come (workouts, diet).
+// Individual client page: profile + progress (slice 3), workouts (slice 4),
+// and diet (slice 5) sections.
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AppShell from '../components/AppShell.jsx';
 import ClientFormModal from '../components/ClientFormModal.jsx';
 import ClientProgress from '../components/ClientProgress.jsx';
 import ClientWorkouts from '../components/ClientWorkouts.jsx';
+import ClientDiet from '../components/ClientDiet.jsx';
 import { getClient, deleteClient } from '../api/clients.js';
 
 function initials(name) {
@@ -118,10 +119,7 @@ export default function ClientDetail() {
 
       <ClientWorkouts clientId={client.id} />
 
-      <div className="mt-4 rounded-2xl bg-slate-800 p-4">
-        <h2 className="font-semibold text-slate-300">Diet</h2>
-        <p className="mt-1 text-sm text-slate-500">Coming in a later slice.</p>
-      </div>
+      <ClientDiet clientId={client.id} />
 
       {editing && (
         <ClientFormModal
