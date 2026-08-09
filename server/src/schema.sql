@@ -53,3 +53,60 @@ CREATE TABLE IF NOT EXISTS measurements (
 
 CREATE INDEX IF NOT EXISTS idx_weight_client_date ON weight_entries (client_id, date);
 CREATE INDEX IF NOT EXISTS idx_measurements_client ON measurements (client_id, date);
+
+-- Exercise library (slice 4). Shared across all clients so exercises aren't
+-- retyped per client. Name is unique case-insensitively.
+CREATE TABLE IF NOT EXISTS exercises (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  name       TEXT NOT NULL COLLATE NOCASE UNIQUE,
+  category   TEXT, -- optional grouping: chest, legs, back, shoulders, arms, core
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+-- Per-client workout plan: named days (e.g. "Chest Day"), each grouping a
+-- list of exercises from the library.
+CREATE TABLE IF NOT EXISTS workout_days (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  client_id  INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
+  name       TEXT NOT NULL,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS workout_day_exercises (
+  workout_day_id INTEGER NOT NULL REFERENCES workout_days(id) ON DELETE CASCADE,
+  exercise_id    INTEGER NOT NULL REFERENCES exercises(id),
+  sort_order     INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (workout_day_id, exercise_id)
+);
+
+-- Logged workout sessions (slice 4). One row per client per date — re-logging
+-- a day replaces that day's session (upsert). workout_day_id is optional: it
+-- links the log to the plan day it followed, but sessions can stand alone.
+CREATE TABLE IF NOT EXISTS workout_sessions (
+  id             INTEGER PRIMARY KEY AUTOINCREMENT,
+  client_id      INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
+  date           TEXT NOT NULL, -- YYYY-MM-DD
+  workout_day_id INTEGER REFERENCES workout_days(id) ON DELETE SET NULL,
+  notes          TEXT,
+  created_at     TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at     TEXT NOT NULL DEFAULT (datetime('now')),
+  UNIQUE (client_id, date)
+);
+
+-- Logged sets: a session has exercises, each exercise has one or more sets.
+-- weight in kg, reps as an integer. PRs and overload are derived from here.
+CREATE TABLE IF NOT EXISTS workout_sets (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  session_id  INTEGER NOT NULL REFERENCES workout_sessions(id) ON DELETE CASCADE,
+  exercise_id INTEGER NOT NULL REFERENCES exercises(id),
+  set_number  INTEGER NOT NULL,
+  weight      REAL NOT NULL, -- kg
+  reps        INTEGER NOT NULL,
+  created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_workout_days_client ON workout_days (client_id);
+CREATE INDEX IF NOT EXISTS idx_sessions_client_date ON workout_sessions (client_id, date);
+CREATE INDEX IF NOT EXISTS idx_sets_session ON workout_sets (session_id);
+CREATE INDEX IF NOT EXISTS idx_sets_exercise ON workout_sets (exercise_id);

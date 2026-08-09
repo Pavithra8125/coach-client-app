@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import AppShell from '../components/AppShell.jsx';
 import ClientFormModal from '../components/ClientFormModal.jsx';
 import ClientProgress from '../components/ClientProgress.jsx';
+import ClientWorkouts from '../components/ClientWorkouts.jsx';
 import { getClient, deleteClient } from '../api/clients.js';
 
 function initials(name) {
@@ -115,13 +116,11 @@ export default function ClientDetail() {
 
       <ClientProgress clientId={client.id} />
 
-      <div className="mt-4 grid gap-4 sm:grid-cols-2">
-        {['Workouts', 'Diet'].map((section) => (
-          <div key={section} className="rounded-2xl bg-slate-800 p-4">
-            <h2 className="font-semibold text-slate-300">{section}</h2>
-            <p className="mt-1 text-sm text-slate-500">Coming in a later slice.</p>
-          </div>
-        ))}
+      <ClientWorkouts clientId={client.id} />
+
+      <div className="mt-4 rounded-2xl bg-slate-800 p-4">
+        <h2 className="font-semibold text-slate-300">Diet</h2>
+        <p className="mt-1 text-sm text-slate-500">Coming in a later slice.</p>
       </div>
 
       {editing && (

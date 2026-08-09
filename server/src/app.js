@@ -8,6 +8,8 @@ import { SqliteSessionStore } from './sessionStore.js';
 import { authRouter } from './routes/auth.js';
 import { clientsRouter } from './routes/clients.js';
 import { progressRouter } from './routes/progress.js';
+import { exercisesRouter } from './routes/exercises.js';
+import { workoutsRouter } from './routes/workouts.js';
 import { requireAuth } from './middleware/requireAuth.js';
 
 export function createApp() {
@@ -44,6 +46,8 @@ export function createApp() {
   // Private routes — everything below requires a logged-in session.
   app.use('/api/clients', requireAuth, clientsRouter);
   app.use('/api/clients', requireAuth, progressRouter);
+  app.use('/api/clients', requireAuth, workoutsRouter);
+  app.use('/api/exercises', requireAuth, exercisesRouter);
 
   return app;
 }
