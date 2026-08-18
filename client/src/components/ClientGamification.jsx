@@ -389,8 +389,6 @@ export default function ClientGamification({ clientId }) {
         },
       ]
     : [];
-
-  return (
   return (
     <section>
       <h2 className="mb-6 text-2xl font-extrabold tracking-tight text-white">Gamification</h2>
