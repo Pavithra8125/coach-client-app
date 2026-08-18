@@ -46,7 +46,7 @@ export default function LiftHistoryCard({ liftHistory }) {
               </span>
             )}
             {exercise.pr && (
-              <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-400">
+              <span className="rounded-full border border-amber-500/50 bg-gradient-to-r from-amber-500/20 to-yellow-500/20 px-2 py-0.5 text-xs font-bold text-amber-300 shadow-[0_0_10px_rgba(245,158,11,0.3)]">
                 PR {exercise.pr.weight} kg × {exercise.pr.reps} · {fmtDate(exercise.pr.date)}
               </span>
             )}
@@ -67,12 +67,24 @@ export default function LiftHistoryCard({ liftHistory }) {
                   const prev = exercise.history[i - 1];
                   const delta = prev ? Math.round((h.est_1rm - prev.est_1rm) * 10) / 10 : null;
                   const isPr = exercise.pr && h.session_id === exercise.pr.session_id;
+                  
+                  let bgClass = '';
+                  if (isPr) {
+                    bgClass = 'bg-amber-500/10';
+                  } else if (delta > 0) {
+                    // subtle up intensity
+                    bgClass = 'bg-emerald-500/[0.03] hover:bg-emerald-500/[0.06]';
+                  } else if (delta < 0) {
+                    // subtle down intensity
+                    bgClass = 'bg-red-500/[0.03] hover:bg-red-500/[0.06]';
+                  }
+                  
                   return (
-                    <tr key={h.session_id} className={`border-t border-slate-700/50 ${isPr ? 'bg-amber-500/5' : ''}`}>
+                    <tr key={h.session_id} className={`border-t border-slate-700/50 transition-colors ${bgClass}`}>
                       <td className="py-1.5 pr-3 text-slate-300">{fmtDate(h.date)}</td>
                       <td className="py-1.5 pr-3 text-slate-200">
                         {h.weight} kg × {h.reps}
-                        {isPr && <span className="ml-1.5 text-xs font-medium text-amber-400">PR</span>}
+                        {isPr && <span className="ml-1.5 rounded text-[10px] font-bold uppercase text-amber-400 drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]">PR</span>}
                       </td>
                       <td className="py-1.5 pr-3 text-slate-400">{h.est_1rm} kg</td>
                       <td className="py-1.5">

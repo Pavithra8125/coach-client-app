@@ -173,7 +173,8 @@ export default function ClientProgress({ clientId }) {
 
       <div className="grid gap-4 lg:grid-cols-3">
         {/* Weight: log form + smoothed trend chart */}
-        <div className="rounded-2xl bg-slate-800 p-4 lg:col-span-2">
+        <div className="group relative overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-800/90 p-4.5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md lg:col-span-2">
+          <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-blue-500 to-cyan-400" />
           <h3 className="font-semibold text-slate-300">Weight</h3>
           <form onSubmit={handleWeightSubmit} className="mt-3 flex flex-wrap items-end gap-3">
             <div>
@@ -225,7 +226,7 @@ export default function ClientProgress({ clientId }) {
               <>
                 <div className="mb-1 flex items-center gap-4 text-xs text-slate-400">
                   <span className="flex items-center gap-1.5">
-                    <span className="h-0.5 w-4 rounded-full" style={{ background: SERIES }} />
+                    <span className="h-0.5 w-4 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400" />
                     Trend
                   </span>
                   <span className="flex items-center gap-1.5">
@@ -235,6 +236,12 @@ export default function ClientProgress({ clientId }) {
                 </div>
                 <ResponsiveContainer width="100%" height={260}>
                   <ComposedChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
+                    <defs>
+                      <linearGradient id="trendGradient" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stopColor="#3b82f6" />
+                        <stop offset="100%" stopColor="#06b6d4" />
+                      </linearGradient>
+                    </defs>
                     <CartesianGrid stroke={GRID} strokeWidth={1} vertical={false} />
                     <XAxis
                       dataKey="date"
@@ -258,12 +265,12 @@ export default function ClientProgress({ clientId }) {
                     <Line
                       type="monotone"
                       dataKey="trend"
-                      stroke={SERIES}
-                      strokeWidth={2}
+                      stroke="url(#trendGradient)"
+                      strokeWidth={3}
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       dot={false}
-                      activeDot={{ r: 5, fill: SERIES, stroke: SURFACE, strokeWidth: 2 }}
+                      activeDot={{ r: 5, fill: '#06b6d4', stroke: SURFACE, strokeWidth: 2 }}
                       isAnimationActive={false}
                     />
                     <Scatter dataKey="weight" shape={rawDot} isAnimationActive={false} />
@@ -275,7 +282,8 @@ export default function ClientProgress({ clientId }) {
         </div>
 
         {/* Measurements: log form */}
-        <div className="rounded-2xl bg-slate-800 p-4">
+        <div className="group relative overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-800/90 p-4.5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
+          <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-400" />
           <h3 className="font-semibold text-slate-300">Measurements</h3>
           <form onSubmit={handleMeasurementsSubmit} className="mt-3 space-y-3">
             <div>
@@ -326,7 +334,8 @@ export default function ClientProgress({ clientId }) {
 
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         {/* Weight log entries */}
-        <div className="rounded-2xl bg-slate-800 p-4">
+        <div className="group relative overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-800/90 p-4.5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
+          <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-slate-600 to-slate-400" />
           <h3 className="mb-2 font-semibold text-slate-300">Weight log</h3>
           {newestFirst.length === 0 ? (
             <p className="text-sm text-slate-500">No entries yet.</p>
@@ -361,7 +370,8 @@ export default function ClientProgress({ clientId }) {
         </div>
 
         {/* Measurement history */}
-        <div className="rounded-2xl bg-slate-800 p-4">
+        <div className="group relative overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-800/90 p-4.5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
+          <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-slate-600 to-slate-400" />
           <h3 className="mb-2 font-semibold text-slate-300">Measurement history</h3>
           {measurements.length === 0 ? (
             <p className="text-sm text-slate-500">No measurements yet.</p>

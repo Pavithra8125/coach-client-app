@@ -19,29 +19,46 @@ function fmtMacro(n) {
 }
 
 const TOTALS = [
-  { key: 'protein', label: 'Protein', unit: 'g' },
-  { key: 'carbs', label: 'Carbs', unit: 'g' },
-  { key: 'fat', label: 'Fat', unit: 'g' },
-  { key: 'calories', label: 'Calories', unit: 'kcal' },
+  { key: 'protein', label: 'Protein', unit: 'g', theme: { bar: 'from-blue-500 to-cyan-400', text: 'text-blue-400' } },
+  { key: 'carbs', label: 'Carbs', unit: 'g', theme: { bar: 'from-amber-500 to-yellow-400', text: 'text-amber-400' } },
+  { key: 'fat', label: 'Fat', unit: 'g', theme: { bar: 'from-purple-500 to-fuchsia-400', text: 'text-purple-400' } },
+  { key: 'calories', label: 'Calories', unit: 'kcal', theme: { bar: 'from-orange-500 to-red-400', text: 'text-orange-400' } },
 ];
 
 function TotalsRow({ totals, targets }) {
   return (
-    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
       {TOTALS.map((row) => {
         const target = targets?.[row.key] ?? 0;
         const value = totals[row.key] ?? 0;
         const over = target > 0 && value > target;
+        
+        let progress = 0;
+        if (target > 0) {
+          progress = Math.min(100, (value / target) * 100);
+        }
+
         return (
-          <div key={row.key} className="rounded-xl border border-slate-700/60 p-2 text-center">
-            <div className="text-[11px] uppercase tracking-wide text-slate-500">{row.label}</div>
-            <div className={`mt-0.5 text-lg font-semibold ${over ? 'text-amber-400' : 'text-slate-100'}`}>
+          <div key={row.key} className="group relative overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-800/90 p-3.5 text-center shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
+            <div className={`absolute left-0 right-0 top-0 h-1 bg-gradient-to-r ${row.theme.bar}`} />
+            
+            <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">{row.label}</div>
+            <div className={`mt-1 text-2xl font-extrabold tracking-tight ${over ? row.theme.text : 'text-white'}`}>
               {fmtMacro(value)}
-              <span className="ml-0.5 text-xs font-normal text-slate-500">{row.unit}</span>
             </div>
-            <div className="text-xs text-slate-500">
+            
+            <div className="mt-1 text-xs text-slate-500">
               {target > 0 ? `target ${fmtMacro(target)} ${row.unit}` : 'no target'}
             </div>
+
+            {target > 0 && (
+              <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-slate-900 border border-slate-700/50">
+                <div 
+                  className={`h-full rounded-full bg-gradient-to-r ${row.theme.bar} transition-all duration-500 ease-out`} 
+                  style={{ width: `${progress}%` }} 
+                />
+              </div>
+            )}
           </div>
         );
       })}
