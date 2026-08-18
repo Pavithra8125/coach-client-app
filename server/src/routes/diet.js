@@ -70,7 +70,7 @@ dietRouter.put('/:clientId/meal-plan', (req, res) => {
   const calRaw = req.body?.calories;
   const calParsed = intOrNull(calRaw, 'calories');
   if (calParsed && typeof calParsed === 'object') {
-    return res.status(400).json({ error: calParsed.error });
+    return res.status(400).json({ error: calParsed.invalid });
   }
   vals.calories = calParsed ?? 0;
 
@@ -148,7 +148,7 @@ dietRouter.post('/:clientId/food-log', (req, res) => {
     }
   }
   const calResult = intOrNull(req.body?.calories, 'calories');
-  if (typeof calResult === 'object') return res.status(400).json({ error: calResult.error });
+  if (typeof calResult === 'object') return res.status(400).json({ error: calResult.invalid });
   macros.calories = calResult ?? 0;
 
   const result = db
