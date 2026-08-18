@@ -8,6 +8,7 @@ import ClientProgress from '../components/ClientProgress.jsx';
 import ClientWorkouts from '../components/ClientWorkouts.jsx';
 import ClientDiet from '../components/ClientDiet.jsx';
 import ClientCheckins from '../components/ClientCheckins.jsx';
+import ClientGamification from '../components/ClientGamification.jsx';
 import { getClient, deleteClient } from '../api/clients.js';
 
 function initials(name) {
@@ -119,6 +120,8 @@ export default function ClientDetail() {
       <ClientProgress clientId={client.id} />
 
       <ClientWorkouts clientId={client.id} />
+
+      <ClientGamification clientId={client.id} />
 
       <ClientDiet clientId={client.id} />
 

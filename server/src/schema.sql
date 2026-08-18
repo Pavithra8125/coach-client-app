@@ -206,3 +206,26 @@ CREATE TABLE IF NOT EXISTS coach_notes (
 
 CREATE INDEX IF NOT EXISTS idx_checkins_client_date ON checkins (client_id, date);
 CREATE INDEX IF NOT EXISTS idx_coach_notes_client ON coach_notes (client_id, date);
+
+-- ---------------------------------------------------------------------------
+-- Gamification (slice 7)
+
+-- Coach-set milestone targets for a client. A target is either a body-weight
+-- goal (type 'weight', progress derived from the weight log) or a lift goal
+-- (type 'exercise', progress derived from the best estimated 1RM on that
+-- exercise). The current value / progress is computed on read from existing
+-- data — only the target itself is stored here.
+CREATE TABLE IF NOT EXISTS milestone_targets (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  client_id   INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
+  type        TEXT NOT NULL, -- 'weight' | 'exercise'
+  label       TEXT,          -- optional custom label shown in the UI
+  target      REAL NOT NULL, -- kg
+  unit        TEXT NOT NULL DEFAULT 'kg',
+  exercise_id INTEGER REFERENCES exercises(id) ON DELETE SET NULL,
+  created_at  TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at  TEXT NOT NULL DEFAULT (datetime('now')),
+  CHECK (type IN ('weight', 'exercise'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_milestone_targets_client ON milestone_targets (client_id);
