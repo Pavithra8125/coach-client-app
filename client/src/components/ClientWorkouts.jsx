@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   createExercise,
   createPlanDay,
+  deletePlanDay,
   getLiftHistory,
   getPlan,
   getSessions,
