@@ -157,13 +157,13 @@ export default function ClientProgress({ clientId }) {
     'w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-slate-500 focus:outline-none';
 
   return (
-    <section className="mt-8">
-      <div className="mb-3 flex items-baseline justify-between">
-        <h2 className="text-lg font-semibold text-slate-200">Progress</h2>
+    <section className="mt-2">
+      <div className="mb-6 flex items-baseline justify-between">
+        <h2 className="text-2xl font-extrabold tracking-tight text-white">Progress</h2>
         {latest && (
-          <p className="text-sm text-slate-400">
+          <p className="text-sm font-medium text-slate-400">
             Latest weight{' '}
-            <span className="font-semibold text-slate-100">{latest.weight} kg</span>
+            <span className="font-extrabold text-white">{latest.weight} kg</span>
             <span className="text-slate-500"> · {fmtDate(latest.date)}</span>
           </p>
         )}
@@ -175,7 +175,7 @@ export default function ClientProgress({ clientId }) {
         {/* Weight: log form + smoothed trend chart */}
         <div className="group relative overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-800/90 p-4.5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md lg:col-span-2">
           <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-blue-500 to-cyan-400" />
-          <h3 className="font-semibold text-slate-300">Weight</h3>
+          <h3 className="mb-4 text-xl font-extrabold tracking-tight text-white">Weight</h3>
           <form onSubmit={handleWeightSubmit} className="mt-3 flex flex-wrap items-end gap-3">
             <div>
               <label className={labelCls} htmlFor="w-date">
@@ -208,7 +208,7 @@ export default function ClientProgress({ clientId }) {
             </div>
             <button
               type="submit"
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-500"
+              className="rounded-xl bg-gradient-to-b from-blue-500 to-blue-600 px-5 py-2 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:from-blue-400 hover:to-blue-500 hover:shadow-xl"
             >
               Log weight
             </button>
@@ -284,7 +284,7 @@ export default function ClientProgress({ clientId }) {
         {/* Measurements: log form */}
         <div className="group relative overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-800/90 p-4.5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
           <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-400" />
-          <h3 className="font-semibold text-slate-300">Measurements</h3>
+          <h3 className="mb-4 text-xl font-extrabold tracking-tight text-white">Measurements</h3>
           <form onSubmit={handleMeasurementsSubmit} className="mt-3 space-y-3">
             <div>
               <label className={labelCls} htmlFor="m-date">
@@ -323,7 +323,7 @@ export default function ClientProgress({ clientId }) {
             ))}
             <button
               type="submit"
-              className="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-500"
+              className="w-full rounded-xl bg-gradient-to-b from-emerald-500 to-emerald-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:from-emerald-400 hover:to-emerald-500 hover:shadow-xl"
             >
               Log measurements
             </button>
@@ -336,7 +336,7 @@ export default function ClientProgress({ clientId }) {
         {/* Weight log entries */}
         <div className="group relative overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-800/90 p-4.5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
           <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-slate-600 to-slate-400" />
-          <h3 className="mb-2 font-semibold text-slate-300">Weight log</h3>
+          <h3 className="mb-4 text-xl font-extrabold tracking-tight text-white">Weight log</h3>
           {newestFirst.length === 0 ? (
             <p className="text-sm text-slate-500">No entries yet.</p>
           ) : (
@@ -372,7 +372,7 @@ export default function ClientProgress({ clientId }) {
         {/* Measurement history */}
         <div className="group relative overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-800/90 p-4.5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
           <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-slate-600 to-slate-400" />
-          <h3 className="mb-2 font-semibold text-slate-300">Measurement history</h3>
+          <h3 className="mb-4 text-xl font-extrabold tracking-tight text-white">Measurement history</h3>
           {measurements.length === 0 ? (
             <p className="text-sm text-slate-500">No measurements yet.</p>
           ) : (

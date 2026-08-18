@@ -96,9 +96,9 @@ export default function ClientDiet({ clientId }) {
   }
 
   return (
-    <section className="mt-8">
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold text-slate-200">Diet</h2>
+    <section>
+      <div className="mb-6 flex items-center justify-between gap-3">
+        <h2 className="text-2xl font-extrabold tracking-tight text-white">Diet</h2>
         <div className="flex items-center gap-2">
           <label htmlFor="diet-track-date" className="text-xs font-medium text-slate-400">
             Track date

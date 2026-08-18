@@ -391,8 +391,9 @@ export default function ClientGamification({ clientId }) {
     : [];
 
   return (
-    <section className="mt-8">
-      <h2 className="mb-3 text-lg font-semibold text-slate-200">Gamification</h2>
+  return (
+    <section>
+      <h2 className="mb-6 text-2xl font-extrabold tracking-tight text-white">Gamification</h2>
 
       {error && <p className="mb-4 rounded-lg bg-red-950/50 px-3 py-2 text-sm text-red-400">{error}</p>}
 
@@ -404,15 +405,15 @@ export default function ClientGamification({ clientId }) {
       </div>
 
       {/* Heatmap */}
-      <div className="mt-4 rounded-2xl border border-slate-700/80 bg-slate-800/90 p-4 shadow-sm">
-        <h3 className="font-semibold text-slate-200">Workout calendar</h3>
-        <p className="text-xs text-slate-400">Sets logged per day, over the last six months.</p>
+      <div className="mt-6 rounded-2xl border border-slate-700/80 bg-slate-800/90 p-5 shadow-sm">
+        <h3 className="mb-1 text-xl font-extrabold tracking-tight text-white">Workout calendar</h3>
+        <p className="text-xs text-slate-400 mb-4">Sets logged per day, over the last six months.</p>
         <Heatmap heatmap={heatmap} />
       </div>
 
       {/* Badges */}
-      <div className="mt-4 rounded-2xl border border-slate-700/80 bg-slate-800/90 p-4 shadow-sm">
-        <h3 className="font-semibold text-slate-200">Achievements</h3>
+      <div className="mt-6 rounded-2xl border border-slate-700/80 bg-slate-800/90 p-5 shadow-sm">
+        <h3 className="mb-4 text-xl font-extrabold tracking-tight text-white">Achievements</h3>
         <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {badges.map((b) => (
             <BadgeTile key={b.id} badge={b} />
@@ -421,17 +422,17 @@ export default function ClientGamification({ clientId }) {
       </div>
 
       {/* Milestones */}
-      <div className="mt-4 rounded-2xl border border-slate-700/80 bg-slate-800/90 p-4 shadow-sm">
-        <div className="flex items-center justify-between gap-3">
+      <div className="mt-6 rounded-2xl border border-slate-700/80 bg-slate-800/90 p-5 shadow-sm">
+        <div className="flex items-center justify-between gap-3 mb-4">
           <div>
-            <h3 className="font-semibold text-slate-200">Milestones</h3>
-            <p className="text-xs text-slate-400">
+            <h3 className="text-xl font-extrabold tracking-tight text-white">Milestones</h3>
+            <p className="text-xs text-slate-400 mt-1">
               Coach-set targets with live progress toward them.
             </p>
           </div>
           <button
             onClick={() => openModal(null)}
-            className="shrink-0 rounded-lg bg-blue-600 px-3.5 py-1.5 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-blue-500 hover:shadow"
+            className="shrink-0 rounded-lg bg-gradient-to-b from-blue-500 to-blue-600 px-4 py-2 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:from-blue-400 hover:to-blue-500 hover:shadow-xl"
           >
             Add target
           </button>

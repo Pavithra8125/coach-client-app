@@ -79,8 +79,8 @@ export default function ClientWorkouts({ clientId }) {
   }
 
   return (
-    <section className="mt-8">
-      <h2 className="mb-3 text-lg font-semibold text-slate-200">Workouts</h2>
+    <section>
+      <h2 className="mb-6 text-2xl font-extrabold tracking-tight text-white">Workouts</h2>
 
       {error && <p className="mb-4 rounded-lg bg-red-950/50 px-3 py-2 text-sm text-red-400">{error}</p>}
 

@@ -3,12 +3,13 @@
 // managed from inside that modal.
 export default function PlanCard({ plan, onAddDay, onEditDay, onDeleteDay }) {
   return (
-    <div className="rounded-2xl bg-slate-800 p-4">
-      <div className="flex items-center justify-between">
-        <h3 className="font-semibold text-slate-300">Workout plan</h3>
+    <div className="group relative overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-800/90 p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
+      <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-500" />
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-xl font-extrabold tracking-tight text-white">Workout plan</h3>
         <button
           onClick={onAddDay}
-          className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-blue-500"
+          className="rounded-xl bg-gradient-to-b from-blue-500 to-blue-600 px-4 py-2 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:from-blue-400 hover:to-blue-500 hover:shadow-xl"
         >
           Add day
         </button>

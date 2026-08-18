@@ -78,8 +78,10 @@ export default function ClientCheckins({ clientId }) {
   }
 
   return (
-    <section className="mt-8">
-      <h2 className="mb-3 text-lg font-semibold text-slate-200">Check-ins &amp; coach's log</h2>
+    <section>
+      <div className="mb-6 flex items-center justify-between gap-3">
+        <h2 className="text-2xl font-extrabold tracking-tight text-white">Check-ins &amp; coach's log</h2>
+      </div>
 
       {error && <p className="mb-4 rounded-lg bg-red-950/50 px-3 py-2 text-sm text-red-400">{error}</p>}
 
@@ -90,7 +92,7 @@ export default function ClientCheckins({ clientId }) {
             <button
               type="button"
               onClick={() => setModal({})}
-              className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-blue-500"
+              className="rounded-xl bg-gradient-to-b from-blue-500 to-blue-600 px-4 py-2 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:from-blue-400 hover:to-blue-500 hover:shadow-xl"
             >
               New check-in
             </button>

@@ -154,10 +154,11 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
   const totalSets = sessions.reduce((n, s) => n + s.exercises.reduce((m, ex) => m + ex.sets.length, 0), 0);
 
   return (
-    <div className="rounded-2xl bg-slate-800 p-4">
-      <h3 className="font-semibold text-slate-300">Log workout</h3>
+    <div className="group relative overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-800/90 p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
+      <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500" />
+      <h3 className="mb-4 text-xl font-extrabold tracking-tight text-white">Log workout</h3>
 
-      <form onSubmit={handleSubmit} className="mt-3 space-y-3">
+      <form onSubmit={handleSubmit} className="space-y-3">
         <div className="flex gap-3">
           <div className="flex-1">
             <label className={labelCls} htmlFor="log-date">
@@ -302,7 +303,7 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
         <button
           type="submit"
           disabled={saving}
-          className="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full rounded-xl bg-gradient-to-b from-indigo-500 to-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:from-indigo-400 hover:to-indigo-500 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
         >
           {saving ? 'Saving…' : 'Save workout'}
         </button>

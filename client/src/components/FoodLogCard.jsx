@@ -124,8 +124,9 @@ export default function FoodLogCard({ clientId, date, entries, totals, targets, 
   const snacks = entries.filter((e) => !e.meal_label || !MEALS.includes(e.meal_label));
 
   return (
-    <div className="rounded-2xl bg-slate-800 p-4">
-      <h3 className="font-semibold text-slate-300">Food log</h3>
+    <div className="group relative overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-800/90 p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
+      <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-orange-500 to-red-500" />
+      <h3 className="mb-4 text-xl font-extrabold tracking-tight text-white">Food log</h3>
 
       <div className="mt-3">
         <TotalsRow totals={totals} targets={targets} />
@@ -199,7 +200,7 @@ export default function FoodLogCard({ clientId, date, entries, totals, targets, 
         <button
           type="submit"
           disabled={saving}
-          className="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full rounded-xl bg-gradient-to-b from-blue-500 to-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:from-blue-400 hover:to-blue-500 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
         >
           {saving ? 'Adding…' : 'Add food'}
         </button>
