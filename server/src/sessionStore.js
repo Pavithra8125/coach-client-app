@@ -1,6 +1,5 @@
 // A minimal express-session Store backed by SQLite, so login sessions survive
-// server restarts (matching the "stay logged in" requirement). We write our
-// own instead of pulling in the stale `better-sqlite3-session-store` package.
+// server restarts (matching the "stay logged in" requirement).
 import session from 'express-session';
 import { config } from './config.js';
 
@@ -15,52 +14,61 @@ export class SqliteSessionStore extends Store {
     this._pruneTimer.unref?.();
   }
 
-  get(sid, cb) {
+  async get(sid, cb) {
     try {
-      const row = this.db
-        .prepare('SELECT data FROM sessions WHERE id = ? AND expires_at > ?')
-        .get(sid, Date.now());
+      const row = (await this.db.execute({
+        sql: 'SELECT data FROM sessions WHERE id = ? AND expires_at > ?',
+        args: [sid, Date.now()]
+      })).rows[0];
       cb(null, row ? JSON.parse(row.data) : null);
     } catch (err) {
       cb(err);
     }
   }
 
-  set(sid, sess, cb) {
+  async set(sid, sess, cb) {
     try {
-      this.db
-        .prepare(
-          `INSERT INTO sessions (id, data, expires_at) VALUES (?, ?, ?)
-           ON CONFLICT(id) DO UPDATE SET data = excluded.data, expires_at = excluded.expires_at`
-        )
-        .run(sid, JSON.stringify(sess), this._expiresAt(sess));
+      await this.db.execute({
+        sql: `INSERT INTO sessions (id, data, expires_at) VALUES (?, ?, ?)
+           ON CONFLICT(id) DO UPDATE SET data = excluded.data, expires_at = excluded.expires_at`,
+        args: [sid, JSON.stringify(sess), this._expiresAt(sess)]
+      });
       cb?.(null);
     } catch (err) {
       cb?.(err);
     }
   }
 
-  destroy(sid, cb) {
+  async destroy(sid, cb) {
     try {
-      this.db.prepare('DELETE FROM sessions WHERE id = ?').run(sid);
+      await this.db.execute({
+        sql: 'DELETE FROM sessions WHERE id = ?',
+        args: [sid]
+      });
       cb?.(null);
     } catch (err) {
       cb?.(err);
     }
   }
 
-  touch(sid, sess, cb) {
+  async touch(sid, sess, cb) {
     try {
-      this.db.prepare('UPDATE sessions SET expires_at = ? WHERE id = ?').run(this._expiresAt(sess), sid);
+      await this.db.execute({
+        sql: 'UPDATE sessions SET expires_at = ? WHERE id = ?',
+        args: [this._expiresAt(sess), sid]
+      });
       cb?.(null);
     } catch (err) {
       cb?.(err);
     }
   }
 
-  prune() {
+  async prune() {
     try {
-      this.db.prepare('DELETE FROM sessions WHERE expires_at <= ?').run(Date.now());
+      await this.db.execute({
+        sql: 'DELETE FROM sessions WHERE expires_at <= ?',
+        args: [Date.now()]
+      });
     } catch {
       // Background cleanup — never let it crash the server.
     }

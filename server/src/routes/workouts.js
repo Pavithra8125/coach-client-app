@@ -8,8 +8,11 @@ export const workoutsRouter = Router();
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
-function requireClient(req, res) {
-  const client = db.prepare('SELECT id FROM clients WHERE id = ?').get(req.params.clientId);
+async function requireClient(req, res) {
+  const client = (await db.execute({
+    sql: 'SELECT id FROM clients WHERE id = ?',
+    args: [req.params.clientId]
+  })).rows[0];
   if (!client) {
     res.status(404).json({ error: 'Client not found' });
     return null;
@@ -39,7 +42,7 @@ function e1rm(weight, reps) {
 
 // Accepts an array of ids, returns only positive integers that exist in the
 // library, deduped — unknown ids are dropped rather than crashing on the FK.
-function cleanExerciseIds(raw) {
+async function cleanExerciseIds(raw) {
   if (!Array.isArray(raw)) return [];
   const seen = new Set();
   const ids = [];
@@ -53,7 +56,10 @@ function cleanExerciseIds(raw) {
   if (ids.length === 0) return [];
   const placeholders = ids.map(() => '?').join(',');
   const existing = new Set(
-    db.prepare(`SELECT id FROM exercises WHERE id IN (${placeholders})`).all(...ids).map((r) => r.id)
+    (await db.execute({
+      sql: `SELECT id FROM exercises WHERE id IN (${placeholders})`,
+      args: [...ids]
+    })).rows.map((r) => r.id)
   );
   return ids.filter((id) => existing.has(id));
 }
@@ -61,18 +67,18 @@ function cleanExerciseIds(raw) {
 // ---- Plan -----------------------------------------------------------------
 
 // GET /api/clients/:clientId/plan — days in order, each with its exercises.
-workoutsRouter.get('/:clientId/plan', (req, res) => {
-  if (!requireClient(req, res)) return;
-  const rows = db
-    .prepare(
-      `SELECT wd.id AS day_id, wd.name, wde.exercise_id, e.name AS exercise_name, e.category
-       FROM workout_days wd
-       LEFT JOIN workout_day_exercises wde ON wde.workout_day_id = wd.id
-       LEFT JOIN exercises e ON e.id = wde.exercise_id
-       WHERE wd.client_id = ?
-       ORDER BY wd.sort_order, wde.sort_order, wd.id`
-    )
-    .all(req.params.clientId);
+workoutsRouter.get('/:clientId/plan', async (req, res) => {
+  if (!(await requireClient(req, res))) return;
+  const rows = (await db.execute({
+    sql: `SELECT wd.id AS day_id, wd.name, wde.exercise_id, e.name AS exercise_name, e.category
+     FROM workout_days wd
+     LEFT JOIN workout_day_exercises wde ON wde.workout_day_id = wd.id
+     LEFT JOIN exercises e ON e.id = wde.exercise_id
+     WHERE wd.client_id = ?
+     ORDER BY wd.sort_order, wde.sort_order, wd.id`,
+
+    args: [req.params.clientId]
+  })).rows;
 
   const days = [];
   const byId = new Map();
@@ -91,90 +97,116 @@ workoutsRouter.get('/:clientId/plan', (req, res) => {
 });
 
 // POST /api/clients/:clientId/plan/days — create a named day with exercises.
-workoutsRouter.post('/:clientId/plan/days', (req, res) => {
-  if (!requireClient(req, res)) return;
+workoutsRouter.post('/:clientId/plan/days', async (req, res) => {
+  if (!(await requireClient(req, res))) return;
   const name = typeof req.body?.name === 'string' ? req.body.name.trim() : '';
   if (!name) return res.status(400).json({ error: 'name is required' });
 
-  const ids = cleanExerciseIds(req.body?.exercise_ids);
-  const dayId = db.transaction((clientId, dayName, exerciseIds) => {
-    const result = db
-      .prepare('INSERT INTO workout_days (client_id, name) VALUES (?, ?)')
-      .run(clientId, dayName);
-    const insert = db.prepare(
-      'INSERT INTO workout_day_exercises (workout_day_id, exercise_id, sort_order) VALUES (?, ?, ?)'
-    );
-    exerciseIds.forEach((exerciseId, i) => insert.run(result.lastInsertRowid, exerciseId, i));
-    return result.lastInsertRowid;
-  })(req.params.clientId, name, ids);
+  const ids = await cleanExerciseIds(req.body?.exercise_ids);
+  let dayId;
+  const tx = await db.transaction("write");
+  try {
+    const result = await tx.execute({
+      sql: 'INSERT INTO workout_days (client_id, name) VALUES (?, ?)',
+      args: [req.params.clientId, name]
+    });
+    dayId = result.lastInsertRowid.toString();
+    for (let i = 0; i < ids.length; i++) {
+      await tx.execute({
+        sql: 'INSERT INTO workout_day_exercises (workout_day_id, exercise_id, sort_order) VALUES (?, ?, ?)',
+        args: [dayId, ids[i], i]
+      });
+    }
+    await tx.commit();
+  } catch (e) {
+    await tx.rollback();
+    throw e;
+  }
 
   res.status(201).json({ dayId });
 });
 
 // PUT /api/clients/:clientId/plan/days/:dayId — rename, and/or replace the
 // exercise list (send exercise_ids to replace it; omit to leave it alone).
-workoutsRouter.put('/:clientId/plan/days/:dayId', (req, res) => {
-  if (!requireClient(req, res)) return;
-  const day = db
-    .prepare('SELECT id FROM workout_days WHERE id = ? AND client_id = ?')
-    .get(req.params.dayId, req.params.clientId);
+workoutsRouter.put('/:clientId/plan/days/:dayId', async (req, res) => {
+  if (!(await requireClient(req, res))) return;
+  const day = (await db.execute({
+    sql: 'SELECT id FROM workout_days WHERE id = ? AND client_id = ?',
+    args: [req.params.dayId, req.params.clientId]
+  })).rows[0];
   if (!day) return res.status(404).json({ error: 'Workout day not found' });
 
   const body = req.body ?? {};
   const name = typeof body.name === 'string' ? body.name.trim() : null;
-  const ids = cleanExerciseIds(body.exercise_ids);
+  const ids = await cleanExerciseIds(body.exercise_ids);
 
-  db.transaction((dayId, dayName, exerciseIds) => {
-    if (dayName) db.prepare('UPDATE workout_days SET name = ? WHERE id = ?').run(dayName, dayId);
-    if (Array.isArray(body.exercise_ids)) {
-      db.prepare('DELETE FROM workout_day_exercises WHERE workout_day_id = ?').run(dayId);
-      const insert = db.prepare(
-        'INSERT INTO workout_day_exercises (workout_day_id, exercise_id, sort_order) VALUES (?, ?, ?)'
-      );
-      exerciseIds.forEach((exerciseId, i) => insert.run(dayId, exerciseId, i));
+  const tx = await db.transaction("write");
+  try {
+    if (name) {
+      await tx.execute({
+        sql: 'UPDATE workout_days SET name = ? WHERE id = ?',
+        args: [name, req.params.dayId]
+      });
     }
-  })(req.params.dayId, name, ids);
+    if (Array.isArray(body.exercise_ids)) {
+      await tx.execute({
+        sql: 'DELETE FROM workout_day_exercises WHERE workout_day_id = ?',
+        args: [req.params.dayId]
+      });
+      for (let i = 0; i < ids.length; i++) {
+        await tx.execute({
+          sql: 'INSERT INTO workout_day_exercises (workout_day_id, exercise_id, sort_order) VALUES (?, ?, ?)',
+          args: [req.params.dayId, ids[i], i]
+        });
+      }
+    }
+    await tx.commit();
+  } catch (e) {
+    await tx.rollback();
+    throw e;
+  }
 
   res.json({ ok: true });
 });
 
 // DELETE /api/clients/:clientId/plan/days/:dayId — logged sessions keep their
 // rows (workout_day_id is set to NULL via ON DELETE SET NULL).
-workoutsRouter.delete('/:clientId/plan/days/:dayId', (req, res) => {
-  if (!requireClient(req, res)) return;
-  const result = db
-    .prepare('DELETE FROM workout_days WHERE id = ? AND client_id = ?')
-    .run(req.params.dayId, req.params.clientId);
-  if (result.changes === 0) return res.status(404).json({ error: 'Workout day not found' });
+workoutsRouter.delete('/:clientId/plan/days/:dayId', async (req, res) => {
+  if (!(await requireClient(req, res))) return;
+  const result = await db.execute({
+    sql: 'DELETE FROM workout_days WHERE id = ? AND client_id = ?',
+    args: [req.params.dayId, req.params.clientId]
+  });
+  if (result.rowsAffected === 0) return res.status(404).json({ error: 'Workout day not found' });
   res.json({ ok: true });
 });
 
 // ---- Sessions -------------------------------------------------------------
 
 // GET /api/clients/:clientId/sessions — newest first, each with its sets.
-workoutsRouter.get('/:clientId/sessions', (req, res) => {
-  if (!requireClient(req, res)) return;
-  const sessions = db
-    .prepare(
-      `SELECT s.id, s.date, s.workout_day_id, s.notes, wd.name AS day_name
-       FROM workout_sessions s
-       LEFT JOIN workout_days wd ON wd.id = s.workout_day_id
-       WHERE s.client_id = ?
-       ORDER BY s.date DESC, s.id DESC`
-    )
-    .all(req.params.clientId);
+workoutsRouter.get('/:clientId/sessions', async (req, res) => {
+  if (!(await requireClient(req, res))) return;
+  const sessions = (await db.execute({
+    sql: `SELECT s.id, s.date, s.workout_day_id, s.notes, wd.name AS day_name
+     FROM workout_sessions s
+     LEFT JOIN workout_days wd ON wd.id = s.workout_day_id
+     WHERE s.client_id = ?
+     ORDER BY s.date DESC, s.id DESC`,
+
+    args: [req.params.clientId]
+  })).rows;
   const byId = new Map(sessions.map((s) => [s.id, { ...s, exercises: [] }]));
 
-  const sets = db
-    .prepare(
-      `SELECT st.session_id, st.exercise_id, st.set_number, st.weight, st.reps, e.name AS exercise_name
-       FROM workout_sets st
-       JOIN workout_sessions s ON s.id = st.session_id
-       JOIN exercises e ON e.id = st.exercise_id
-       WHERE s.client_id = ?
-       ORDER BY st.session_id, st.exercise_id, st.set_number`
-    )
-    .all(req.params.clientId);
+  const sets = (await db.execute({
+    sql: `SELECT st.session_id, st.exercise_id, st.set_number, st.weight, st.reps, e.name AS exercise_name
+     FROM workout_sets st
+     JOIN workout_sessions s ON s.id = st.session_id
+     JOIN exercises e ON e.id = st.exercise_id
+     WHERE s.client_id = ?
+     ORDER BY st.session_id, st.exercise_id, st.set_number`,
+
+    args: [req.params.clientId]
+  })).rows;
 
   for (const row of sets) {
     const session = byId.get(row.session_id);
@@ -192,8 +224,8 @@ workoutsRouter.get('/:clientId/sessions', (req, res) => {
 
 // POST /api/clients/:clientId/sessions — upsert a session for a date.
 // Saving again for the same date replaces that day's session (and its sets).
-workoutsRouter.post('/:clientId/sessions', (req, res) => {
-  if (!requireClient(req, res)) return;
+workoutsRouter.post('/:clientId/sessions', async (req, res) => {
+  if (!(await requireClient(req, res))) return;
   const { date, workout_day_id, notes, sets } = req.body ?? {};
   if (!validateDate(date)) return res.status(400).json({ error: 'date is required (YYYY-MM-DD)' });
 
@@ -215,40 +247,54 @@ workoutsRouter.post('/:clientId/sessions', (req, res) => {
 
   const dayId = workout_day_id == null || workout_day_id === '' ? null : toPosInt(workout_day_id);
   if (dayId !== null) {
-    const day = db
-      .prepare('SELECT id FROM workout_days WHERE id = ? AND client_id = ?')
-      .get(dayId, req.params.clientId);
+    const day = (await db.execute({
+      sql: 'SELECT id FROM workout_days WHERE id = ? AND client_id = ?',
+      args: [dayId, req.params.clientId]
+    })).rows[0];
     if (!day) return res.status(400).json({ error: 'workout_day_id does not belong to this client' });
   }
   const note = typeof notes === 'string' && notes.trim() ? notes.trim() : null;
 
   try {
-    const sessionId = db.transaction((clientId, data) => {
-      let session = db
-        .prepare('SELECT id FROM workout_sessions WHERE client_id = ? AND date = ?')
-        .get(clientId, data.date);
+    const tx = await db.transaction("write");
+    let sessionId;
+    try {
+      let session = (await tx.execute({
+        sql: 'SELECT id FROM workout_sessions WHERE client_id = ? AND date = ?',
+        args: [req.params.clientId, date]
+      })).rows[0];
+      
       if (session) {
-        db.prepare(
-          `UPDATE workout_sessions
-           SET workout_day_id = ?, notes = ?, updated_at = datetime('now')
-           WHERE id = ?`
-        ).run(data.dayId, data.note, session.id);
+        await tx.execute({
+          sql: `UPDATE workout_sessions SET workout_day_id = ?, notes = ?, updated_at = datetime('now') WHERE id = ?`,
+          args: [dayId, note, session.id]
+        });
+        sessionId = session.id;
       } else {
-        session = {
-          id: db
-            .prepare(
-              'INSERT INTO workout_sessions (client_id, date, workout_day_id, notes) VALUES (?, ?, ?, ?)'
-            )
-            .run(clientId, data.date, data.dayId, data.note).lastInsertRowid,
-        };
+        const result = await tx.execute({
+          sql: 'INSERT INTO workout_sessions (client_id, date, workout_day_id, notes) VALUES (?, ?, ?, ?)',
+          args: [req.params.clientId, date, dayId, note]
+        });
+        sessionId = result.lastInsertRowid.toString();
       }
-      db.prepare('DELETE FROM workout_sets WHERE session_id = ?').run(session.id);
-      const insert = db.prepare(
-        'INSERT INTO workout_sets (session_id, exercise_id, set_number, weight, reps) VALUES (?, ?, ?, ?, ?)'
-      );
-      data.sets.forEach((set, i) => insert.run(session.id, set.exercise_id, i + 1, set.weight, set.reps));
-      return session.id;
-    })(req.params.clientId, { date, dayId, note, sets: cleaned });
+
+      await tx.execute({
+        sql: 'DELETE FROM workout_sets WHERE session_id = ?',
+        args: [sessionId]
+      });
+
+      for (let i = 0; i < cleaned.length; i++) {
+        const set = cleaned[i];
+        await tx.execute({
+          sql: 'INSERT INTO workout_sets (session_id, exercise_id, set_number, weight, reps) VALUES (?, ?, ?, ?, ?)',
+          args: [sessionId, set.exercise_id, i + 1, set.weight, set.reps]
+        });
+      }
+      await tx.commit();
+    } catch(e) {
+      await tx.rollback();
+      throw e;
+    }
 
     res.status(201).json({ sessionId });
   } catch (err) {
@@ -260,12 +306,13 @@ workoutsRouter.post('/:clientId/sessions', (req, res) => {
 });
 
 // DELETE /api/clients/:clientId/sessions/:sessionId
-workoutsRouter.delete('/:clientId/sessions/:sessionId', (req, res) => {
-  if (!requireClient(req, res)) return;
-  const result = db
-    .prepare('DELETE FROM workout_sessions WHERE id = ? AND client_id = ?')
-    .run(req.params.sessionId, req.params.clientId);
-  if (result.changes === 0) return res.status(404).json({ error: 'Workout session not found' });
+workoutsRouter.delete('/:clientId/sessions/:sessionId', async (req, res) => {
+  if (!(await requireClient(req, res))) return;
+  const result = await db.execute({
+    sql: 'DELETE FROM workout_sessions WHERE id = ? AND client_id = ?',
+    args: [req.params.sessionId, req.params.clientId]
+  });
+  if (result.rowsAffected === 0) return res.status(404).json({ error: 'Workout session not found' });
   res.json({ ok: true });
 });
 
@@ -274,20 +321,20 @@ workoutsRouter.delete('/:clientId/sessions/:sessionId', (req, res) => {
 // GET /api/clients/:clientId/lift-history — per exercise, every logged session
 // with its best set (by est. 1RM), plus the all-time PR. The client renders
 // each lift's progression here; overload = a row's e1RM vs the previous row.
-workoutsRouter.get('/:clientId/lift-history', (req, res) => {
-  if (!requireClient(req, res)) return;
-  const rows = db
-    .prepare(
-      `SELECT st.exercise_id, e.name AS exercise_name, e.category,
-              s.id AS session_id, s.date, st.weight, st.reps
-       FROM workout_sets st
-       JOIN workout_sessions s ON s.id = st.session_id
-       JOIN exercises e ON e.id = st.exercise_id
-       WHERE s.client_id = ?
-       ORDER BY e.category IS NULL, e.category COLLATE NOCASE, e.name COLLATE NOCASE,
-                s.date, s.id, st.set_number`
-    )
-    .all(req.params.clientId);
+workoutsRouter.get('/:clientId/lift-history', async (req, res) => {
+  if (!(await requireClient(req, res))) return;
+  const rows = (await db.execute({
+    sql: `SELECT st.exercise_id, e.name AS exercise_name, e.category,
+            s.id AS session_id, s.date, st.weight, st.reps
+     FROM workout_sets st
+     JOIN workout_sessions s ON s.id = st.session_id
+     JOIN exercises e ON e.id = st.exercise_id
+     WHERE s.client_id = ?
+     ORDER BY e.category IS NULL, e.category COLLATE NOCASE, e.name COLLATE NOCASE,
+              s.date, s.id, st.set_number`,
+
+    args: [req.params.clientId]
+  })).rows;
 
   // Group by exercise, keeping only each session's best set (highest e1RM).
   const byExercise = new Map();

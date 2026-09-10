@@ -66,7 +66,8 @@ export default function MealPlanCard({ mealPlan, onSave, onDelete }) {
   }
 
   return (
-    <div className="rounded-2xl border border-white/40 bg-white/30 p-4 backdrop-blur-xl">
+    <>
+      <div className="rounded-2xl border border-white/40 bg-white/30 p-4 backdrop-blur-xl">
       <div className="flex items-center justify-between gap-2">
         <h3 className="font-semibold text-slate-800">Meal plan</h3>
         <button
@@ -114,10 +115,12 @@ export default function MealPlanCard({ mealPlan, onSave, onDelete }) {
         </div>
       )}
 
+      </div>
+
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-md rounded-2xl border border-white/40 bg-white/30 p-5 backdrop-blur-xl">
-            <h3 className="text-lg font-semibold text-slate-700">{mealPlan ? 'Edit meal plan' : 'Set meal plan'}</h3>
+          <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
+            <h3 className="text-lg font-semibold text-slate-900">{mealPlan ? 'Edit meal plan' : 'Set meal plan'}</h3>
             <form onSubmit={handleSubmit} className="mt-4 space-y-3">
               <div>
                 <label className={labelCls} htmlFor="mp-name">
@@ -200,6 +203,6 @@ export default function MealPlanCard({ mealPlan, onSave, onDelete }) {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

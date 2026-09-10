@@ -25,53 +25,69 @@ function validate({ name, startDate }) {
 }
 
 // GET /api/clients — all clients, alphabetical.
-clientsRouter.get('/', (req, res) => {
-  const clients = db.prepare(`SELECT ${SELECT} FROM clients ORDER BY name COLLATE NOCASE`).all();
+clientsRouter.get('/', async (req, res) => {
+  const clients = (await db.execute({
+    sql: `SELECT ${SELECT} FROM clients ORDER BY name COLLATE NOCASE`,
+    args: []
+  })).rows;
   res.json({ clients });
 });
 
 // GET /api/clients/:id
-clientsRouter.get('/:id', (req, res) => {
-  const client = db.prepare(`SELECT ${SELECT} FROM clients WHERE id = ?`).get(req.params.id);
+clientsRouter.get('/:id', async (req, res) => {
+  const client = (await db.execute({
+    sql: `SELECT ${SELECT} FROM clients WHERE id = ?`,
+    args: [req.params.id]
+  })).rows[0];
   if (!client) return res.status(404).json({ error: 'Client not found' });
   res.json({ client });
 });
 
 // POST /api/clients — create.
-clientsRouter.post('/', (req, res) => {
+clientsRouter.post('/', async (req, res) => {
   const { name, photoUrl, goals, startDate } = normalize(req.body);
   const problem = validate({ name, startDate });
   if (problem) return res.status(400).json({ error: problem });
 
-  const result = db
-    .prepare('INSERT INTO clients (name, photo_url, goals, start_date) VALUES (?, ?, ?, ?)')
-    .run(name, photoUrl, goals, startDate);
-  const client = db.prepare(`SELECT ${SELECT} FROM clients WHERE id = ?`).get(result.lastInsertRowid);
+  const result = await db.execute({
+    sql: 'INSERT INTO clients (name, photo_url, goals, start_date) VALUES (?, ?, ?, ?)',
+    args: [name, photoUrl, goals, startDate]
+  });
+  const client = (await db.execute({
+    sql: `SELECT ${SELECT} FROM clients WHERE id = ?`,
+    args: [result.lastInsertRowid.toString()]
+  })).rows[0];
   res.status(201).json({ client });
 });
 
 // PUT /api/clients/:id — update.
-clientsRouter.put('/:id', (req, res) => {
+clientsRouter.put('/:id', async (req, res) => {
   const { name, photoUrl, goals, startDate } = normalize(req.body);
   const problem = validate({ name, startDate });
   if (problem) return res.status(400).json({ error: problem });
 
-  const result = db
-    .prepare(
-      `UPDATE clients
-       SET name = ?, photo_url = ?, goals = ?, start_date = ?, updated_at = datetime('now')
-       WHERE id = ?`
-    )
-    .run(name, photoUrl, goals, startDate, req.params.id);
-  if (result.changes === 0) return res.status(404).json({ error: 'Client not found' });
+  const result = await db.execute({
+    sql: `UPDATE clients
+     SET name = ?, photo_url = ?, goals = ?, start_date = ?, updated_at = datetime('now')
+     WHERE id = ?`,
 
-  const client = db.prepare(`SELECT ${SELECT} FROM clients WHERE id = ?`).get(req.params.id);
+    args: [name, photoUrl, goals, startDate, req.params.id]
+  });
+  if (result.rowsAffected === 0) return res.status(404).json({ error: 'Client not found' });
+
+  const client = (await db.execute({
+    sql: `SELECT ${SELECT} FROM clients WHERE id = ?`,
+    args: [req.params.id]
+  })).rows[0];
   res.json({ client });
 });
 
 // DELETE /api/clients/:id
-clientsRouter.delete('/:id', (req, res) => {
-  const result = db.prepare('DELETE FROM clients WHERE id = ?').run(req.params.id);
-  if (result.changes === 0) return res.status(404).json({ error: 'Client not found' });
+clientsRouter.delete('/:id', async (req, res) => {
+  const result = await db.execute({
+    sql: 'DELETE FROM clients WHERE id = ?',
+    args: [req.params.id]
+  });
+  if (result.rowsAffected === 0) return res.status(404).json({ error: 'Client not found' });
   res.json({ ok: true });
 });

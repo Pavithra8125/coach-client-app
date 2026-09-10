@@ -10,8 +10,11 @@ export const gamificationRouter = Router();
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-function requireClient(req, res) {
-  const client = db.prepare('SELECT id FROM clients WHERE id = ?').get(req.params.clientId);
+async function requireClient(req, res) {
+  const client = (await db.execute({
+    sql: 'SELECT id FROM clients WHERE id = ?',
+    args: [req.params.clientId]
+  })).rows[0];
   if (!client) {
     res.status(404).json({ error: 'Client not found' });
     return null;
@@ -165,19 +168,20 @@ const BADGE_DEFS = [
   { id: 'sessions_50', name: '50 Workouts', icon: '🎯', description: 'Logged 50 workout sessions.' },
 ];
 
-function computeBadges(clientId, bestDays) {
-  const sessions = db
-    .prepare('SELECT id, date FROM workout_sessions WHERE client_id = ? ORDER BY date, id')
-    .all(clientId);
-  const setRows = db
-    .prepare(
-      `SELECT st.exercise_id, st.weight, st.reps, s.date
-       FROM workout_sets st
-       JOIN workout_sessions s ON s.id = st.session_id
-       WHERE s.client_id = ?
-       ORDER BY s.date, s.id, st.set_number`
-    )
-    .all(clientId);
+async function computeBadges(clientId, bestDays) {
+  const sessions = (await db.execute({
+    sql: 'SELECT id, date FROM workout_sessions WHERE client_id = ? ORDER BY date, id',
+    args: [clientId]
+  })).rows;
+  const setRows = (await db.execute({
+    sql: `SELECT st.exercise_id, st.weight, st.reps, s.date
+     FROM workout_sets st
+     JOIN workout_sessions s ON s.id = st.session_id
+     WHERE s.client_id = ?
+     ORDER BY s.date, s.id, st.set_number`,
+
+    args: [clientId]
+  })).rows;
 
   const dates = sessions.map((s) => s.date);
   const firstDate = dates[0] ?? null;
@@ -264,27 +268,31 @@ function computeBadges(clientId, bestDays) {
 const M_COLS =
   'id, client_id, type, label, target, unit, exercise_id, created_at, updated_at';
 
-function getMilestone(id, clientId) {
-  return db
-    .prepare(`SELECT ${M_COLS} FROM milestone_targets WHERE id = ? AND client_id = ?`)
-    .get(id, clientId);
+async function getMilestone(id, clientId) {
+  return (await db.execute({
+    sql: `SELECT ${M_COLS} FROM milestone_targets WHERE id = ? AND client_id = ?`,
+    args: [id, clientId]
+  })).rows[0];
 }
 
 // Turn a stored target row into what the client renders: the current value
 // pulled from live data, the distance remaining, and a 0-100 progress pct.
 // Weight targets measure from the client's first logged weight (direction from
 // there to the target); lift targets measure from 0 toward the target 1RM.
-function computeMilestone(m) {
+async function computeMilestone(m) {
   if (m.type === 'exercise') {
-    const exercise = db.prepare('SELECT name FROM exercises WHERE id = ?').get(m.exercise_id);
-    const rows = db
-      .prepare(
-        `SELECT st.weight, st.reps FROM workout_sets st
-         JOIN workout_sessions s ON s.id = st.session_id
-         WHERE s.client_id = ? AND st.exercise_id = ?
-         ORDER BY s.date, s.id, st.set_number`
-      )
-      .all(m.client_id, m.exercise_id);
+    const exercise = (await db.execute({
+      sql: 'SELECT name FROM exercises WHERE id = ?',
+      args: [m.exercise_id]
+    })).rows[0];
+    const rows = (await db.execute({
+      sql: `SELECT st.weight, st.reps FROM workout_sets st
+       JOIN workout_sessions s ON s.id = st.session_id
+       WHERE s.client_id = ? AND st.exercise_id = ?
+       ORDER BY s.date, s.id, st.set_number`,
+
+      args: [m.client_id, m.exercise_id]
+    })).rows;
     let current = null;
     for (const row of rows) {
       const est = e1rm(row.weight, row.reps);
@@ -306,9 +314,10 @@ function computeMilestone(m) {
   }
 
   // type 'weight'
-  const entries = db
-    .prepare('SELECT date, weight FROM weight_entries WHERE client_id = ? ORDER BY date, id')
-    .all(m.client_id);
+  const entries = (await db.execute({
+    sql: 'SELECT date, weight FROM weight_entries WHERE client_id = ? ORDER BY date, id',
+    args: [m.client_id]
+  })).rows;
   const start = entries.length ? entries[0].weight : null;
   const current = entries.length ? entries[entries.length - 1].weight : null;
 
@@ -355,43 +364,45 @@ function computeMilestone(m) {
 
 // GET /api/clients/:clientId/gamification — streaks + heatmap + badges in one
 // call; everything derived from existing workout data.
-gamificationRouter.get('/:clientId/gamification', (req, res) => {
-  if (!requireClient(req, res)) return;
-  const dates = db
-    .prepare('SELECT date FROM workout_sessions WHERE client_id = ? ORDER BY date')
-    .all(req.params.clientId)
+gamificationRouter.get('/:clientId/gamification', async (req, res) => {
+  if (!(await requireClient(req, res))) return;
+  const dates = (await db.execute({
+    sql: 'SELECT date FROM workout_sessions WHERE client_id = ? ORDER BY date',
+    args: [req.params.clientId]
+  })).rows
     .map((r) => r.date);
-  const setCounts = db
-    .prepare(
-      `SELECT s.date, COUNT(st.id) AS n
-       FROM workout_sessions s
-       JOIN workout_sets st ON st.session_id = s.id
-       WHERE s.client_id = ?
-       GROUP BY s.date`
-    )
-    .all(req.params.clientId);
+  const setCounts = (await db.execute({
+    sql: `SELECT s.date, COUNT(st.id) AS n
+     FROM workout_sessions s
+     JOIN workout_sets st ON st.session_id = s.id
+     WHERE s.client_id = ?
+     GROUP BY s.date`,
+
+    args: [req.params.clientId]
+  })).rows;
   const countsByDate = new Map(setCounts.map((r) => [r.date, r.n]));
 
   const streak = { ...dayStreaks(dates), ...weekStreaks(dates) };
   const hmap = heatmap(countsByDate);
-  const badges = computeBadges(req.params.clientId, streak.best_days);
+  const badges = await computeBadges(req.params.clientId, streak.best_days);
   res.json({ streak, heatmap: hmap, badges });
 });
 
 // GET /api/clients/:clientId/milestones — all coach-set targets, each with its
 // live current value and progress.
-gamificationRouter.get('/:clientId/milestones', (req, res) => {
-  if (!requireClient(req, res)) return;
-  const rows = db
-    .prepare('SELECT ' + M_COLS + ' FROM milestone_targets WHERE client_id = ? ORDER BY id')
-    .all(req.params.clientId);
-  res.json({ milestones: rows.map(computeMilestone) });
+gamificationRouter.get('/:clientId/milestones', async (req, res) => {
+  if (!(await requireClient(req, res))) return;
+  const rows = (await db.execute({
+    sql: 'SELECT ' + M_COLS + ' FROM milestone_targets WHERE client_id = ? ORDER BY id',
+    args: [req.params.clientId]
+  })).rows;
+  res.json({ milestones: await Promise.all(rows.map(computeMilestone)) });
 });
 
 // POST /api/clients/:clientId/milestones — create a target.
 // Body: { type: 'weight'|'exercise', target (kg), label?, exercise_id? }
-gamificationRouter.post('/:clientId/milestones', (req, res) => {
-  if (!requireClient(req, res)) return;
+gamificationRouter.post('/:clientId/milestones', async (req, res) => {
+  if (!(await requireClient(req, res))) return;
   const body = req.body ?? {};
   const type = body.type;
   if (type !== 'weight' && type !== 'exercise') {
@@ -406,24 +417,26 @@ gamificationRouter.post('/:clientId/milestones', (req, res) => {
   if (type === 'exercise') {
     exerciseId = toPosInt(body.exercise_id);
     if (exerciseId === null) return res.status(400).json({ error: 'exercise_id is required for exercise targets' });
-    const exercise = db.prepare('SELECT id FROM exercises WHERE id = ?').get(exerciseId);
+    const exercise = (await db.execute({
+      sql: 'SELECT id FROM exercises WHERE id = ?',
+      args: [exerciseId]
+    })).rows[0];
     if (!exercise) return res.status(400).json({ error: 'exercise does not exist' });
   }
 
-  const result = db
-    .prepare(
-      'INSERT INTO milestone_targets (client_id, type, label, target, unit, exercise_id) VALUES (?, ?, ?, ?, ?, ?)'
-    )
-    .run(req.params.clientId, type, label, target, unit, exerciseId);
-  res.status(201).json({ milestone: computeMilestone(getMilestone(result.lastInsertRowid, req.params.clientId)) });
+  const result = await db.execute({
+    sql: 'INSERT INTO milestone_targets (client_id, type, label, target, unit, exercise_id) VALUES (?, ?, ?, ?, ?, ?)',
+    args: [req.params.clientId, type, label, target, unit, exerciseId]
+  });
+  res.status(201).json({ milestone: await computeMilestone(await getMilestone(result.lastInsertRowid.toString(), req.params.clientId)) });
 });
 
 // PUT /api/clients/:clientId/milestones/:id — update a target. Any subset of
 // type / target / label / unit / exercise_id may be sent. Type changes are
 // validated together with exercise_id (an exercise target always needs one).
-gamificationRouter.put('/:clientId/milestones/:id', (req, res) => {
-  if (!requireClient(req, res)) return;
-  const m = getMilestone(req.params.id, req.params.clientId);
+gamificationRouter.put('/:clientId/milestones/:id', async (req, res) => {
+  if (!(await requireClient(req, res))) return;
+  const m = await getMilestone(req.params.id, req.params.clientId);
   if (!m) return res.status(404).json({ error: 'Milestone not found' });
 
   const body = req.body ?? {};
@@ -441,7 +454,10 @@ gamificationRouter.put('/:clientId/milestones/:id', (req, res) => {
   }
   if (type === 'exercise') {
     if (exerciseId === null) return res.status(400).json({ error: 'exercise_id is required for exercise targets' });
-    const exercise = db.prepare('SELECT id FROM exercises WHERE id = ?').get(exerciseId);
+    const exercise = (await db.execute({
+      sql: 'SELECT id FROM exercises WHERE id = ?',
+      args: [exerciseId]
+    })).rows[0];
     if (!exercise) return res.status(400).json({ error: 'exercise does not exist' });
   } else {
     exerciseId = null;
@@ -477,16 +493,20 @@ gamificationRouter.put('/:clientId/milestones/:id', (req, res) => {
 
   updates.push("updated_at = datetime('now')");
   params.push(req.params.id, req.params.clientId);
-  db.prepare(`UPDATE milestone_targets SET ${updates.join(', ')} WHERE id = ? AND client_id = ?`).run(...params);
-  res.json({ milestone: computeMilestone(getMilestone(req.params.id, req.params.clientId)) });
+  await db.execute({
+    sql: `UPDATE milestone_targets SET ${updates.join(', ')} WHERE id = ? AND client_id = ?`,
+    args: [...params]
+  });
+  res.json({ milestone: await computeMilestone(await getMilestone(req.params.id, req.params.clientId)) });
 });
 
 // DELETE /api/clients/:clientId/milestones/:id
-gamificationRouter.delete('/:clientId/milestones/:id', (req, res) => {
-  if (!requireClient(req, res)) return;
-  const result = db
-    .prepare('DELETE FROM milestone_targets WHERE id = ? AND client_id = ?')
-    .run(req.params.id, req.params.clientId);
-  if (result.changes === 0) return res.status(404).json({ error: 'Milestone not found' });
+gamificationRouter.delete('/:clientId/milestones/:id', async (req, res) => {
+  if (!(await requireClient(req, res))) return;
+  const result = await db.execute({
+    sql: 'DELETE FROM milestone_targets WHERE id = ? AND client_id = ?',
+    args: [req.params.id, req.params.clientId]
+  });
+  if (result.rowsAffected === 0) return res.status(404).json({ error: 'Milestone not found' });
   res.json({ ok: true });
 });

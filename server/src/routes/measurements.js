@@ -15,7 +15,7 @@ function toNumber(value) {
 }
 
 // PUT /api/measurements/:id
-measurementsRouter.put('/:id', (req, res) => {
+measurementsRouter.put('/:id', async (req, res) => {
   const { logged_date, weight_kg, body_fat_pct, waist_cm, chest_cm, notes } = req.body ?? {};
   
   if (!validateDate(logged_date)) return res.status(400).json({ error: 'logged_date is required (YYYY-MM-DD)' });
@@ -27,13 +27,12 @@ measurementsRouter.put('/:id', (req, res) => {
     fields[key] = n;
   }
 
-  const result = db
-    .prepare(
-      `UPDATE measurements 
-       SET logged_date = ?, weight_kg = ?, body_fat_pct = ?, waist_cm = ?, chest_cm = ?, notes = ?
-       WHERE id = ?`
-    )
-    .run(
+  const result = await db.execute({
+    sql: `UPDATE measurements 
+     SET logged_date = ?, weight_kg = ?, body_fat_pct = ?, waist_cm = ?, chest_cm = ?, notes = ?
+     WHERE id = ?`,
+
+    args: [
       logged_date,
       fields.weight_kg,
       fields.body_fat_pct,
@@ -41,20 +40,25 @@ measurementsRouter.put('/:id', (req, res) => {
       fields.chest_cm,
       typeof notes === 'string' ? notes.trim() : null,
       req.params.id
-    );
+    ]
+  });
 
-  if (result.changes === 0) return res.status(404).json({ error: 'Measurement not found' });
+  if (result.rowsAffected === 0) return res.status(404).json({ error: 'Measurement not found' });
 
-  const entry = db
-    .prepare('SELECT id, client_id, logged_date, weight_kg, body_fat_pct, waist_cm, chest_cm, notes FROM measurements WHERE id = ?')
-    .get(req.params.id);
+  const entry = (await db.execute({
+    sql: 'SELECT id, client_id, logged_date, weight_kg, body_fat_pct, waist_cm, chest_cm, notes FROM measurements WHERE id = ?',
+    args: [req.params.id]
+  })).rows[0];
     
   res.json({ entry });
 });
 
 // DELETE /api/measurements/:id
-measurementsRouter.delete('/:id', (req, res) => {
-  const result = db.prepare('DELETE FROM measurements WHERE id = ?').run(req.params.id);
-  if (result.changes === 0) return res.status(404).json({ error: 'Measurement not found' });
+measurementsRouter.delete('/:id', async (req, res) => {
+  const result = await db.execute({
+    sql: 'DELETE FROM measurements WHERE id = ?',
+    args: [req.params.id]
+  });
+  if (result.rowsAffected === 0) return res.status(404).json({ error: 'Measurement not found' });
   res.json({ ok: true });
 });

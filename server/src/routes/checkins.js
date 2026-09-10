@@ -10,8 +10,11 @@ const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 const COLS = 'id, date, energy, soreness, sleep, adherence, notes, created_at, updated_at';
 
-function requireClient(req, res) {
-  const client = db.prepare('SELECT id FROM clients WHERE id = ?').get(req.params.clientId);
+async function requireClient(req, res) {
+  const client = (await db.execute({
+    sql: 'SELECT id FROM clients WHERE id = ?',
+    args: [req.params.clientId]
+  })).rows[0];
   if (!client) {
     res.status(404).json({ error: 'Client not found' });
     return null;
@@ -38,33 +41,33 @@ function intRange(raw, field, min, max) {
 // ---- Check-ins -------------------------------------------------------------
 
 // GET /api/clients/:clientId/checkins — all check-ins, newest first.
-checkinsRouter.get('/:clientId/checkins', (req, res) => {
-  if (!requireClient(req, res)) return;
-  const checkins = db
-    .prepare(
-      `SELECT ${COLS} FROM checkins WHERE client_id = ? ORDER BY date DESC, id DESC`
-    )
-    .all(req.params.clientId);
+checkinsRouter.get('/:clientId/checkins', async (req, res) => {
+  if (!(await requireClient(req, res))) return;
+  const checkins = (await db.execute({
+    sql: `SELECT ${COLS} FROM checkins WHERE client_id = ? ORDER BY date DESC, id DESC`,
+    args: [req.params.clientId]
+  })).rows;
   res.json({ checkins });
 });
 
 // GET /api/clients/:clientId/checkins/:date — a single check-in for a day.
-checkinsRouter.get('/:clientId/checkins/:date', (req, res) => {
-  if (!requireClient(req, res)) return;
+checkinsRouter.get('/:clientId/checkins/:date', async (req, res) => {
+  if (!(await requireClient(req, res))) return;
   if (!validateDate(req.params.date)) {
     return res.status(400).json({ error: 'date must be YYYY-MM-DD' });
   }
-  const checkin = db
-    .prepare(`SELECT ${COLS} FROM checkins WHERE client_id = ? AND date = ?`)
-    .get(req.params.clientId, req.params.date);
+  const checkin = (await db.execute({
+    sql: `SELECT ${COLS} FROM checkins WHERE client_id = ? AND date = ?`,
+    args: [req.params.clientId, req.params.date]
+  })).rows[0];
   if (!checkin) return res.status(404).json({ error: 'No check-in for that date' });
   res.json({ checkin });
 });
 
 // PUT /api/clients/:clientId/checkins — save/replace the check-in for a date.
 // Any rating left blank is stored as NULL (not filled in that week).
-checkinsRouter.put('/:clientId/checkins', (req, res) => {
-  if (!requireClient(req, res)) return;
+checkinsRouter.put('/:clientId/checkins', async (req, res) => {
+  if (!(await requireClient(req, res))) return;
   const { date } = req.body ?? {};
   if (!validateDate(date)) return res.status(400).json({ error: 'date is required (YYYY-MM-DD)' });
 
@@ -81,27 +84,39 @@ checkinsRouter.put('/:clientId/checkins', (req, res) => {
   }
   const notes = typeof req.body?.notes === 'string' && req.body.notes.trim() ? req.body.notes.trim() : null;
 
-  db.prepare(
-    `INSERT INTO checkins (client_id, date, energy, soreness, sleep, adherence, notes)
+  await db.execute({
+    sql: `INSERT INTO checkins (client_id, date, energy, soreness, sleep, adherence, notes)
      VALUES (?, ?, ?, ?, ?, ?, ?)
      ON CONFLICT(client_id, date) DO UPDATE SET
        energy = excluded.energy, soreness = excluded.soreness, sleep = excluded.sleep,
        adherence = excluded.adherence, notes = excluded.notes,
-       updated_at = datetime('now')`
-  ).run(req.params.clientId, date, vals.energy, vals.soreness, vals.sleep, vals.adherence, notes);
+       updated_at = datetime('now')`,
 
-  const checkin = db
-    .prepare(`SELECT ${COLS} FROM checkins WHERE client_id = ? AND date = ?`)
-    .get(req.params.clientId, date);
+    args: [
+      req.params.clientId,
+      date,
+      vals.energy,
+      vals.soreness,
+      vals.sleep,
+      vals.adherence,
+      notes
+    ]
+  });
+
+  const checkin = (await db.execute({
+    sql: `SELECT ${COLS} FROM checkins WHERE client_id = ? AND date = ?`,
+    args: [req.params.clientId, date]
+  })).rows[0];
   res.json({ checkin });
 });
 
 // DELETE /api/clients/:clientId/checkins/:id
-checkinsRouter.delete('/:clientId/checkins/:id', (req, res) => {
-  if (!requireClient(req, res)) return;
-  const result = db
-    .prepare('DELETE FROM checkins WHERE id = ? AND client_id = ?')
-    .run(req.params.id, req.params.clientId);
-  if (result.changes === 0) return res.status(404).json({ error: 'Check-in not found' });
+checkinsRouter.delete('/:clientId/checkins/:id', async (req, res) => {
+  if (!(await requireClient(req, res))) return;
+  const result = await db.execute({
+    sql: 'DELETE FROM checkins WHERE id = ? AND client_id = ?',
+    args: [req.params.id, req.params.clientId]
+  });
+  if (result.rowsAffected === 0) return res.status(404).json({ error: 'Check-in not found' });
   res.json({ ok: true });
 });

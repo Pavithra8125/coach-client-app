@@ -9,8 +9,11 @@ const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 const COLS = 'id, date, note, created_at';
 
-function requireClient(req, res) {
-  const client = db.prepare('SELECT id FROM clients WHERE id = ?').get(req.params.clientId);
+async function requireClient(req, res) {
+  const client = (await db.execute({
+    sql: 'SELECT id FROM clients WHERE id = ?',
+    args: [req.params.clientId]
+  })).rows[0];
   if (!client) {
     res.status(404).json({ error: 'Client not found' });
     return null;
@@ -26,17 +29,18 @@ function todayStr() {
 // ---- Coach's log -----------------------------------------------------------
 
 // GET /api/clients/:clientId/coach-notes — all notes, newest first.
-coachNotesRouter.get('/:clientId/coach-notes', (req, res) => {
-  if (!requireClient(req, res)) return;
-  const notes = db
-    .prepare(`SELECT ${COLS} FROM coach_notes WHERE client_id = ? ORDER BY date DESC, id DESC`)
-    .all(req.params.clientId);
+coachNotesRouter.get('/:clientId/coach-notes', async (req, res) => {
+  if (!(await requireClient(req, res))) return;
+  const notes = (await db.execute({
+    sql: `SELECT ${COLS} FROM coach_notes WHERE client_id = ? ORDER BY date DESC, id DESC`,
+    args: [req.params.clientId]
+  })).rows;
   res.json({ notes });
 });
 
 // POST /api/clients/:clientId/coach-notes — add a note. date defaults to today.
-coachNotesRouter.post('/:clientId/coach-notes', (req, res) => {
-  if (!requireClient(req, res)) return;
+coachNotesRouter.post('/:clientId/coach-notes', async (req, res) => {
+  if (!(await requireClient(req, res))) return;
   const note = typeof req.body?.note === 'string' ? req.body.note.trim() : '';
   if (!note) return res.status(400).json({ error: 'note is required' });
 
@@ -49,19 +53,24 @@ coachNotesRouter.post('/:clientId/coach-notes', (req, res) => {
     date = rawDate;
   }
 
-  const result = db
-    .prepare('INSERT INTO coach_notes (client_id, date, note) VALUES (?, ?, ?)')
-    .run(req.params.clientId, date, note);
-  const created = db.prepare(`SELECT ${COLS} FROM coach_notes WHERE id = ?`).get(result.lastInsertRowid);
+  const result = await db.execute({
+    sql: 'INSERT INTO coach_notes (client_id, date, note) VALUES (?, ?, ?)',
+    args: [req.params.clientId, date, note]
+  });
+  const created = (await db.execute({
+    sql: `SELECT ${COLS} FROM coach_notes WHERE id = ?`,
+    args: [result.lastInsertRowid.toString()]
+  })).rows[0];
   res.status(201).json({ note: created });
 });
 
 // DELETE /api/clients/:clientId/coach-notes/:id
-coachNotesRouter.delete('/:clientId/coach-notes/:id', (req, res) => {
-  if (!requireClient(req, res)) return;
-  const result = db
-    .prepare('DELETE FROM coach_notes WHERE id = ? AND client_id = ?')
-    .run(req.params.id, req.params.clientId);
-  if (result.changes === 0) return res.status(404).json({ error: 'Note not found' });
+coachNotesRouter.delete('/:clientId/coach-notes/:id', async (req, res) => {
+  if (!(await requireClient(req, res))) return;
+  const result = await db.execute({
+    sql: 'DELETE FROM coach_notes WHERE id = ? AND client_id = ?',
+    args: [req.params.id, req.params.clientId]
+  });
+  if (result.rowsAffected === 0) return res.status(404).json({ error: 'Note not found' });
   res.json({ ok: true });
 });

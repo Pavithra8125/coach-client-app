@@ -17,35 +17,37 @@ function normalize(body) {
 
 // Returns true if err was a duplicate-name conflict (already responded).
 function handleUnique(err, res, name) {
-  if (err?.code === 'SQLITE_CONSTRAINT_UNIQUE') {
-    res.status(409).json({ error: `"${name}" is already in the library` });
+  if (err?.code === 'SQLITE_CONSTRAINT_UNIQUE' || (err?.code === 'SQLITE_CONSTRAINT' && err?.message?.includes('UNIQUE constraint failed'))) {
+    res.status(409).json({ error: 'An exercise with this name already exists' });
     return true;
   }
   return false;
 }
 
 // GET /api/exercises — categories first, then alphabetical.
-exercisesRouter.get('/', (_req, res) => {
-  const exercises = db
-    .prepare(
-      `SELECT ${SELECT} FROM exercises
-       ORDER BY category IS NULL, category COLLATE NOCASE, name COLLATE NOCASE`
-    )
-    .all();
+exercisesRouter.get('/', async (_req, res) => {
+  const exercises = (await db.execute({
+    sql: `SELECT ${SELECT} FROM exercises
+     ORDER BY category IS NULL, category COLLATE NOCASE, name COLLATE NOCASE`,
+
+    args: []
+  })).rows;
   res.json({ exercises });
 });
 
 // POST /api/exercises — add to the library. Name is unique case-insensitively.
-exercisesRouter.post('/', (req, res) => {
+exercisesRouter.post('/', async (req, res) => {
   const { name, category } = normalize(req.body);
-  if (!name) return res.status(400).json({ error: 'name is required' });
+  if (!name) return res.status(400).json({ error: 'Exercise name is required' });
   try {
-    const result = db
-      .prepare('INSERT INTO exercises (name, category) VALUES (?, ?)')
-      .run(name, category);
-    const exercise = db
-      .prepare(`SELECT ${SELECT} FROM exercises WHERE id = ?`)
-      .get(result.lastInsertRowid);
+    const result = await db.execute({
+      sql: 'INSERT INTO exercises (name, category) VALUES (?, ?)',
+      args: [name, category]
+    });
+    const exercise = (await db.execute({
+      sql: `SELECT ${SELECT} FROM exercises WHERE id = ?`,
+      args: [result.lastInsertRowid.toString()]
+    })).rows[0];
     res.status(201).json({ exercise });
   } catch (err) {
     if (handleUnique(err, res, name)) return;
@@ -54,17 +56,19 @@ exercisesRouter.post('/', (req, res) => {
 });
 
 // PUT /api/exercises/:id — rename / recategorize.
-exercisesRouter.put('/:id', (req, res) => {
+exercisesRouter.put('/:id', async (req, res) => {
   const { name, category } = normalize(req.body);
-  if (!name) return res.status(400).json({ error: 'name is required' });
+  if (!name) return res.status(400).json({ error: 'Exercise name is required' });
   try {
-    const result = db
-      .prepare('UPDATE exercises SET name = ?, category = ? WHERE id = ?')
-      .run(name, category, req.params.id);
-    if (result.changes === 0) return res.status(404).json({ error: 'Exercise not found' });
-    const exercise = db
-      .prepare(`SELECT ${SELECT} FROM exercises WHERE id = ?`)
-      .get(req.params.id);
+    const result = await db.execute({
+      sql: 'UPDATE exercises SET name = ?, category = ? WHERE id = ?',
+      args: [name, category, req.params.id]
+    });
+    if (result.rowsAffected === 0) return res.status(404).json({ error: 'Exercise not found' });
+    const exercise = (await db.execute({
+      sql: `SELECT ${SELECT} FROM exercises WHERE id = ?`,
+      args: [req.params.id]
+    })).rows[0];
     res.json({ exercise });
   } catch (err) {
     if (handleUnique(err, res, name)) return;
@@ -73,13 +77,16 @@ exercisesRouter.put('/:id', (req, res) => {
 });
 
 // DELETE /api/exercises/:id — refused if any plan or log still references it.
-exercisesRouter.delete('/:id', (req, res) => {
+exercisesRouter.delete('/:id', async (req, res) => {
   try {
-    const result = db.prepare('DELETE FROM exercises WHERE id = ?').run(req.params.id);
-    if (result.changes === 0) return res.status(404).json({ error: 'Exercise not found' });
+    const result = await db.execute({
+      sql: 'DELETE FROM exercises WHERE id = ?',
+      args: [req.params.id]
+    });
+    if (result.rowsAffected === 0) return res.status(404).json({ error: 'Exercise not found' });
     res.json({ ok: true });
   } catch (err) {
-    if (err?.code === 'SQLITE_CONSTRAINT_FOREIGNKEY') {
+    if (err?.code === 'SQLITE_CONSTRAINT_FOREIGNKEY' || (err?.code === 'SQLITE_CONSTRAINT' && err?.message?.includes('FOREIGN KEY constraint failed'))) {
       return res
         .status(409)
         .json({ error: 'This exercise is used in a plan or log, so it can’t be deleted.' });

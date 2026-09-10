@@ -12,9 +12,10 @@ authRouter.post('/login', async (req, res) => {
     return res.status(400).json({ error: 'username and password are required' });
   }
 
-  const user = db
-    .prepare('SELECT id, username, password_hash FROM users WHERE username = ?')
-    .get(username.trim());
+  const user = (await db.execute({
+    sql: 'SELECT id, username, password_hash FROM users WHERE username = ?',
+    args: [username.trim()]
+  })).rows[0];
 
   // Same message for unknown user and wrong password — don't leak which.
   const ok = user && (await bcrypt.compare(password, user.password_hash));
@@ -40,7 +41,7 @@ authRouter.post('/login', async (req, res) => {
 });
 
 // POST /api/auth/logout -> 200 { ok: true }
-authRouter.post('/logout', (req, res, next) => {
+authRouter.post('/logout', async (req, res, next) => {
   req.session.destroy((err) => {
     if (err) return next(err);
     res.clearCookie('coach.sid');
@@ -49,11 +50,14 @@ authRouter.post('/logout', (req, res, next) => {
 });
 
 // GET /api/auth/me -> 200 { user } | 401
-authRouter.get('/me', (req, res) => {
+authRouter.get('/me', async (req, res) => {
   if (!req.session.userId) {
     return res.status(401).json({ error: 'Not authenticated' });
   }
-  const user = db.prepare('SELECT id, username FROM users WHERE id = ?').get(req.session.userId);
+  const user = (await db.execute({
+    sql: 'SELECT id, username FROM users WHERE id = ?',
+    args: [req.session.userId]
+  })).rows[0];
   if (!user) {
     return res.status(401).json({ error: 'Not authenticated' });
   }
