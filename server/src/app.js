@@ -14,6 +14,7 @@ import { dietRouter } from './routes/diet.js';
 import { checkinsRouter } from './routes/checkins.js';
 import { coachNotesRouter } from './routes/coachNotes.js';
 import { gamificationRouter } from './routes/gamification.js';
+import { measurementsRouter } from './routes/measurements.js';
 import { requireAuth } from './middleware/requireAuth.js';
 
 export function createApp() {
@@ -56,6 +57,7 @@ export function createApp() {
   app.use('/api/clients', requireAuth, coachNotesRouter);
   app.use('/api/clients', requireAuth, gamificationRouter);
   app.use('/api/exercises', requireAuth, exercisesRouter);
+  app.use('/api/measurements', requireAuth, measurementsRouter);
 
   return app;
 }

@@ -123,7 +123,7 @@ export default function ClientCheckins({ clientId }) {
                       </button>
                     </div>
                   </div>
-                  <div className="mt-2 grid grid-cols-4 gap-2">
+                  <div className="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-2">
                     <Metric label="Energy" value={c.energy} unit="/10" />
                     <Metric label="Soreness" value={c.soreness} unit="/10" />
                     <Metric label="Sleep" value={c.sleep} unit="/10" />

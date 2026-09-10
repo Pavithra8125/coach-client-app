@@ -19,10 +19,10 @@ function fmtDate(iso) {
 }
 
 const fieldCls =
-  'w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 ' +
+  'w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2.5 sm:py-2 text-sm text-slate-100 ' +
   'placeholder:text-slate-500 focus:border-slate-500 focus:outline-none';
 const setCls =
-  'w-20 rounded-lg border border-slate-700 bg-slate-900 px-2 py-1.5 text-sm text-slate-100 ' +
+  'w-20 rounded-lg border border-slate-700 bg-slate-900 px-2 py-2 sm:py-1.5 text-sm text-slate-100 ' +
   'focus:border-slate-500 focus:outline-none';
 const labelCls = 'block text-xs font-medium text-slate-400';
 
@@ -159,7 +159,7 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
       <h3 className="mb-4 text-xl font-extrabold tracking-tight text-white">Log workout</h3>
 
       <form onSubmit={handleSubmit} className="space-y-3">
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex-1">
             <label className={labelCls} htmlFor="log-date">
               Date

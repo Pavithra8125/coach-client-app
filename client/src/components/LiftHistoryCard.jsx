@@ -55,7 +55,7 @@ export default function LiftHistoryCard({ liftHistory }) {
           <div className="mt-2 overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-left text-xs text-slate-500">
+                <tr className="text-left text-xs text-slate-500 whitespace-nowrap">
                   <th className="pb-1 pr-3 font-medium">Date</th>
                   <th className="pb-1 pr-3 font-medium">Best set</th>
                   <th className="pb-1 pr-3 font-medium">e1RM</th>
@@ -80,14 +80,14 @@ export default function LiftHistoryCard({ liftHistory }) {
                   }
                   
                   return (
-                    <tr key={h.session_id} className={`border-t border-slate-700/50 transition-colors ${bgClass}`}>
-                      <td className="py-1.5 pr-3 text-slate-300">{fmtDate(h.date)}</td>
-                      <td className="py-1.5 pr-3 text-slate-200">
+                    <tr key={h.session_id} className={`border-t border-slate-700/50 transition-colors whitespace-nowrap ${bgClass}`}>
+                      <td className="py-2.5 sm:py-1.5 pr-3 text-slate-300">{fmtDate(h.date)}</td>
+                      <td className="py-2.5 sm:py-1.5 pr-3 text-slate-200">
                         {h.weight} kg × {h.reps}
                         {isPr && <span className="ml-1.5 rounded text-[10px] font-bold uppercase text-amber-400 drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]">PR</span>}
                       </td>
-                      <td className="py-1.5 pr-3 text-slate-400">{h.est_1rm} kg</td>
-                      <td className="py-1.5">
+                      <td className="py-2.5 sm:py-1.5 pr-3 text-slate-400">{h.est_1rm} kg</td>
+                      <td className="py-2.5 sm:py-1.5">
                         <Delta delta={delta} />
                       </td>
                     </tr>

@@ -27,32 +27,21 @@ CREATE TABLE IF NOT EXISTS clients (
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
--- Weight log (slice 3). One row per client per day — logging a second weight
--- for the same day replaces the first (upsert). weight is stored in kg.
-CREATE TABLE IF NOT EXISTS weight_entries (
-  id         INTEGER PRIMARY KEY AUTOINCREMENT,
-  client_id  INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
-  date       TEXT NOT NULL, -- YYYY-MM-DD
-  weight     REAL NOT NULL, -- kg
-  created_at TEXT NOT NULL DEFAULT (datetime('now')),
-  UNIQUE (client_id, date)
-);
-
--- Body measurements (slice 3). Multiple sessions per day allowed.
--- Lengths in cm, body_fat as a percentage. Null = not measured that day.
+-- Unified measurements (slice 3). Weight and body measurements per day.
 CREATE TABLE IF NOT EXISTS measurements (
-  id         INTEGER PRIMARY KEY AUTOINCREMENT,
-  client_id  INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
-  date       TEXT NOT NULL, -- YYYY-MM-DD
-  waist      REAL, -- cm
-  chest      REAL, -- cm
-  arms       REAL, -- cm
-  body_fat   REAL, -- percent
-  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  client_id    INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
+  coach_id     INTEGER DEFAULT 1,
+  logged_date  TEXT NOT NULL,
+  weight_kg    REAL,
+  body_fat_pct REAL,
+  waist_cm     REAL,
+  chest_cm     REAL,
+  notes        TEXT,
+  created_at   TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE INDEX IF NOT EXISTS idx_weight_client_date ON weight_entries (client_id, date);
-CREATE INDEX IF NOT EXISTS idx_measurements_client ON measurements (client_id, date);
+CREATE INDEX IF NOT EXISTS idx_measurements_client_logged_date ON measurements (client_id, logged_date);
 
 -- Exercise library (slice 4). Shared across all clients so exercises aren't
 -- retyped per client. Name is unique case-insensitively.

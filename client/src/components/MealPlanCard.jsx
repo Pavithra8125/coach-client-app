@@ -4,7 +4,7 @@
 import { useState } from 'react';
 
 const fieldCls =
-  'mt-1 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 ' +
+  'mt-1 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2.5 sm:py-2 text-sm text-slate-100 ' +
   'placeholder:text-slate-500 focus:border-slate-500 focus:outline-none';
 const labelCls = 'block text-xs font-medium text-slate-400';
 

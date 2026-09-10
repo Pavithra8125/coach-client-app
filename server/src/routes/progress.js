@@ -26,98 +26,50 @@ function toNumber(value) {
   return Number.isFinite(n) ? n : null;
 }
 
-// ---- Weight log -----------------------------------------------------------
-
-// GET /api/clients/:clientId/weight — oldest first (what the chart wants).
-progressRouter.get('/:clientId/weight', (req, res) => {
-  if (!requireClient(req, res)) return;
-  const entries = db
-    .prepare(
-      'SELECT id, client_id, date, weight FROM weight_entries WHERE client_id = ? ORDER BY date, id'
-    )
-    .all(req.params.clientId);
-  res.json({ entries });
-});
-
-// POST /api/clients/:clientId/weight — add or update that day's weight (upsert).
-progressRouter.post('/:clientId/weight', (req, res) => {
-  if (!requireClient(req, res)) return;
-  const { date, weight } = req.body ?? {};
-  if (!validateDate(date)) return res.status(400).json({ error: 'date is required (YYYY-MM-DD)' });
-  const w = toNumber(weight);
-  if (w === null || w <= 0) return res.status(400).json({ error: 'weight must be a positive number' });
-
-  db.prepare(
-    `INSERT INTO weight_entries (client_id, date, weight) VALUES (?, ?, ?)
-     ON CONFLICT(client_id, date) DO UPDATE SET weight = excluded.weight`
-  ).run(req.params.clientId, date, w);
-
-  const entry = db
-    .prepare('SELECT id, client_id, date, weight FROM weight_entries WHERE client_id = ? AND date = ?')
-    .get(req.params.clientId, date);
-  res.status(201).json({ entry });
-});
-
-// DELETE /api/clients/:clientId/weight/:entryId
-progressRouter.delete('/:clientId/weight/:entryId', (req, res) => {
-  if (!requireClient(req, res)) return;
-  const result = db
-    .prepare('DELETE FROM weight_entries WHERE id = ? AND client_id = ?')
-    .run(req.params.entryId, req.params.clientId);
-  if (result.changes === 0) return res.status(404).json({ error: 'Entry not found' });
-  res.json({ ok: true });
-});
-
-// ---- Measurements ---------------------------------------------------------
-
-// GET /api/clients/:clientId/measurements — newest first for the table.
+// GET /api/clients/:clientId/measurements — oldest first for the trend chart.
 progressRouter.get('/:clientId/measurements', (req, res) => {
   if (!requireClient(req, res)) return;
   const entries = db
     .prepare(
-      'SELECT id, client_id, date, waist, chest, arms, body_fat FROM measurements WHERE client_id = ? ORDER BY date DESC, id DESC'
+      'SELECT id, client_id, logged_date, weight_kg, body_fat_pct, waist_cm, chest_cm, notes FROM measurements WHERE client_id = ? ORDER BY logged_date, id'
     )
     .all(req.params.clientId);
   res.json({ entries });
 });
 
-// POST /api/clients/:clientId/measurements — any subset of fields is fine.
+// POST /api/clients/:clientId/measurements — create a new measurement
 progressRouter.post('/:clientId/measurements', (req, res) => {
   if (!requireClient(req, res)) return;
-  const { date, waist, chest, arms, body_fat } = req.body ?? {};
-  if (!validateDate(date)) return res.status(400).json({ error: 'date is required (YYYY-MM-DD)' });
+  const { logged_date, weight_kg, body_fat_pct, waist_cm, chest_cm, notes } = req.body ?? {};
+  
+  if (!validateDate(logged_date)) return res.status(400).json({ error: 'logged_date is required (YYYY-MM-DD)' });
 
-  const fields = { waist, chest, arms, body_fat };
+  const fields = { weight_kg, body_fat_pct, waist_cm, chest_cm };
   for (const [key, value] of Object.entries(fields)) {
     const n = toNumber(value);
-    if (n !== null && n < 0) return res.status(400).json({ error: `${key} must be a positive number` });
+    if (n !== null && n <= 0) return res.status(400).json({ error: `${key} must be a positive number` });
     fields[key] = n;
   }
 
   const result = db
     .prepare(
-      'INSERT INTO measurements (client_id, date, waist, chest, arms, body_fat) VALUES (?, ?, ?, ?, ?, ?)'
+      `INSERT INTO measurements 
+       (client_id, coach_id, logged_date, weight_kg, body_fat_pct, waist_cm, chest_cm, notes) 
+       VALUES (?, 1, ?, ?, ?, ?, ?, ?)`
     )
     .run(
       req.params.clientId,
-      date,
-      fields.waist,
-      fields.chest,
-      fields.arms,
-      fields.body_fat
+      logged_date,
+      fields.weight_kg,
+      fields.body_fat_pct,
+      fields.waist_cm,
+      fields.chest_cm,
+      typeof notes === 'string' ? notes.trim() : null
     );
+    
   const entry = db
-    .prepare('SELECT id, client_id, date, waist, chest, arms, body_fat FROM measurements WHERE id = ?')
+    .prepare('SELECT id, client_id, logged_date, weight_kg, body_fat_pct, waist_cm, chest_cm, notes FROM measurements WHERE id = ?')
     .get(result.lastInsertRowid);
+    
   res.status(201).json({ entry });
-});
-
-// DELETE /api/clients/:clientId/measurements/:entryId
-progressRouter.delete('/:clientId/measurements/:entryId', (req, res) => {
-  if (!requireClient(req, res)) return;
-  const result = db
-    .prepare('DELETE FROM measurements WHERE id = ? AND client_id = ?')
-    .run(req.params.entryId, req.params.clientId);
-  if (result.changes === 0) return res.status(404).json({ error: 'Entry not found' });
-  res.json({ ok: true });
 });

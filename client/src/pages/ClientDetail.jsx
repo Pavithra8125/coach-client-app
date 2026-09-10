@@ -10,6 +10,7 @@ import ClientDiet from '../components/ClientDiet.jsx';
 import ClientCheckins from '../components/ClientCheckins.jsx';
 import ClientGamification from '../components/ClientGamification.jsx';
 import { getClient, deleteClient } from '../api/clients.js';
+import { config } from '../config.js';
 
 function initials(name) {
   return name
@@ -134,7 +135,7 @@ export default function ClientDetail() {
                 <p className="text-xl font-extrabold text-white">-- <span className="text-sm font-medium text-slate-500">kg</span></p>
               </div>
             </div>
-            <div className="flex items-center gap-3 border-r border-slate-700/50 pr-4 last:border-0">
+            <div className="flex items-center gap-3 border-r-0 sm:border-r border-slate-700/50 pr-4">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/10 text-xl shadow-sm border border-orange-500/20">
                 🔥
               </div>
@@ -168,7 +169,7 @@ export default function ClientDetail() {
       <div className="space-y-16">
         <ClientProgress clientId={client.id} />
         <ClientWorkouts clientId={client.id} />
-        <ClientGamification clientId={client.id} />
+        {config.FEATURE_GAMIFICATION && <ClientGamification clientId={client.id} />}
         <ClientDiet clientId={client.id} />
         <ClientCheckins clientId={client.id} />
       </div>

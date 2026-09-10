@@ -5,11 +5,11 @@ import { useState } from 'react';
 import { addFood, deleteFood } from '../api/diet.js';
 
 const fieldCls =
-  'w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 ' +
+  'w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2.5 sm:py-2 text-sm text-slate-100 ' +
   'placeholder:text-slate-500 focus:border-slate-500 focus:outline-none';
 const labelCls = 'block text-xs font-medium text-slate-400';
 const macroCls =
-  'w-full rounded-lg border border-slate-700 bg-slate-900 px-2 py-1.5 text-sm text-slate-100 ' +
+  'w-full rounded-lg border border-slate-700 bg-slate-900 px-2 py-2.5 sm:py-1.5 text-sm text-slate-100 ' +
   'placeholder:text-slate-500 focus:border-slate-500 focus:outline-none';
 
 const MEALS = ['breakfast', 'lunch', 'dinner', 'snack'];
@@ -162,7 +162,7 @@ export default function FoodLogCard({ clientId, date, entries, totals, targets, 
             />
           </div>
         </div>
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
           {TOTALS.slice(0, 3).map((row) => (
             <div key={row.key}>
               <label className={labelCls} htmlFor={`fl-${row.key}`}>

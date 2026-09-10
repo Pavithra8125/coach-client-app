@@ -44,20 +44,20 @@ export default function CoachLogCard({ notes, onAdd, onDelete }) {
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Private note about this client…"
-          className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-slate-500 focus:outline-none"
+          className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2.5 sm:py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-slate-500 focus:outline-none"
         />
         <div className="flex items-center gap-2">
           <input
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="rounded-lg border border-slate-700 bg-slate-900 px-2 py-1.5 text-sm text-slate-100 focus:border-slate-500 focus:outline-none"
+            className="rounded-lg border border-slate-700 bg-slate-900 px-2 py-2 sm:py-1.5 text-sm text-slate-100 focus:border-slate-500 focus:outline-none"
             aria-label="Note date"
           />
           <button
             type="submit"
             disabled={saving}
-            className="ml-auto rounded-lg bg-emerald-600 px-4 py-1.5 text-sm font-medium text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="ml-auto rounded-lg bg-emerald-600 px-4 py-2 sm:py-1.5 text-sm font-medium text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {saving ? 'Adding…' : 'Add note'}
           </button>
