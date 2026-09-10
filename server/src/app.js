@@ -1,5 +1,7 @@
 // Express app wiring. Feature routes get mounted here as they're built —
 // each lives in its own file under src/routes/ (e.g. auth.js, clients.js).
+import path from 'path';
+import { fileURLToPath } from 'url';
 import express from 'express';
 import session from 'express-session';
 import { config } from './config.js';
@@ -58,6 +60,16 @@ export function createApp() {
   app.use('/api/clients', requireAuth, gamificationRouter);
   app.use('/api/exercises', requireAuth, exercisesRouter);
   app.use('/api/measurements', requireAuth, measurementsRouter);
+
+
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+  const clientDistPath = path.join(__dirname, '../../client/dist');
+
+  app.use(express.static(clientDistPath));
+
+  app.use((req, res) => {
+    res.sendFile(path.join(clientDistPath, 'index.html'));
+  });
 
   return app;
 }
