@@ -6,7 +6,7 @@ import { useState } from 'react';
 const fieldCls =
   'mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 sm:py-2 text-sm text-slate-900 ' +
   'placeholder:text-slate-500 focus:border-slate-500 focus:outline-none';
-const labelCls = 'block text-xs font-medium text-slate-500';
+const labelCls = 'block text-xs font-medium text-slate-700';
 
 function todayStr() {
   const d = new Date();
@@ -59,7 +59,7 @@ export default function CheckinModal({ checkin, onSave, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-      <div className="w-full max-w-md rounded-2xl bg-white p-5">
+      <div className="w-full max-w-md rounded-2xl border border-white/40 bg-white/30 p-5 backdrop-blur-xl">
         <h3 className="text-lg font-semibold text-slate-700">
           {checkin ? `Edit check-in · ${checkin.date}` : 'New check-in'}
         </h3>
@@ -114,7 +114,7 @@ export default function CheckinModal({ checkin, onSave, onClose }) {
           </div>
 
           {error && <p className="text-sm text-red-600">{error}</p>}
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-700">
             Saving a check-in replaces any earlier check-in on the same date.
           </p>
 
@@ -122,7 +122,7 @@ export default function CheckinModal({ checkin, onSave, onClose }) {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-slate-600 px-4 py-2 text-sm text-slate-600 transition hover:bg-slate-100"
+              className="rounded-lg border border-slate-600 px-4 py-2 text-sm text-slate-800 transition hover:bg-slate-100"
             >
               Cancel
             </button>

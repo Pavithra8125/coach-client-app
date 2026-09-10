@@ -7,7 +7,7 @@ import { addFood, deleteFood } from '../api/diet.js';
 const fieldCls =
   'w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 sm:py-2 text-sm text-slate-900 ' +
   'placeholder:text-slate-500 focus:border-slate-500 focus:outline-none';
-const labelCls = 'block text-xs font-medium text-slate-500';
+const labelCls = 'block text-xs font-medium text-slate-700';
 const macroCls =
   'w-full rounded-lg border border-slate-200 bg-white px-2 py-2.5 sm:py-1.5 text-sm text-slate-900 ' +
   'placeholder:text-slate-500 focus:border-slate-500 focus:outline-none';
@@ -39,15 +39,15 @@ function TotalsRow({ totals, targets }) {
         }
 
         return (
-          <div key={row.key} className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-3.5 text-center shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
+          <div key={row.key} className="group relative overflow-hidden rounded-2xl border border-white/40 bg-white/30 backdrop-blur-xl p-3.5 text-center shadow-lg shadow-emerald-900/5 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/60 hover:shadow-xl hover:shadow-emerald-900/10">
             <div className={`absolute left-0 right-0 top-0 h-1 bg-gradient-to-r ${row.theme.bar}`} />
             
-            <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">{row.label}</div>
+            <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-700">{row.label}</div>
             <div className={`mt-1 text-2xl font-extrabold tracking-tight ${over ? row.theme.text : 'text-slate-900'}`}>
               {fmtMacro(value)}
             </div>
             
-            <div className="mt-1 text-xs text-slate-500">
+            <div className="mt-1 text-xs text-slate-700">
               {target > 0 ? `target ${fmtMacro(target)} ${row.unit}` : 'no target'}
             </div>
 
@@ -124,7 +124,7 @@ export default function FoodLogCard({ clientId, date, entries, totals, targets, 
   const snacks = entries.filter((e) => !e.meal_label || !MEALS.includes(e.meal_label));
 
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
+    <div className="group relative overflow-hidden rounded-2xl border border-white/40 bg-white/30 backdrop-blur-xl p-5 shadow-lg shadow-emerald-900/5 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/60 hover:shadow-xl hover:shadow-emerald-900/10">
       <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-slate-600 to-slate-800" />
       <h3 className="mb-4 text-xl font-extrabold tracking-tight text-slate-900">Food log</h3>
 
@@ -200,7 +200,7 @@ export default function FoodLogCard({ clientId, date, entries, totals, targets, 
         <button
           type="submit"
           disabled={saving}
-          className="w-full rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-slate-800 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+          className="w-full rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-emerald-900/5 transition-all hover:bg-slate-800 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
         >
           {saving ? 'Adding…' : 'Add food'}
         </button>
@@ -208,14 +208,14 @@ export default function FoodLogCard({ clientId, date, entries, totals, targets, 
 
       <div className="mt-4 space-y-4">
         {entries.length === 0 ? (
-          <p className="text-sm text-slate-500">Nothing logged for this day yet.</p>
+          <p className="text-sm text-slate-700">Nothing logged for this day yet.</p>
         ) : (
           <>
             {grouped
               .filter((g) => g.items.length > 0)
               .map((g) => (
                 <div key={g.meal}>
-                  <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-700">
                     {g.meal[0].toUpperCase() + g.meal.slice(1)}
                   </h4>
                   <ul className="space-y-1.5">
@@ -227,7 +227,7 @@ export default function FoodLogCard({ clientId, date, entries, totals, targets, 
               ))}
             {snacks.length > 0 && (
               <div>
-                <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">Other</h4>
+                <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-700">Other</h4>
                 <ul className="space-y-1.5">
                   {snacks.map((entry) => (
                     <FoodRow key={entry.id} entry={entry} onDelete={handleDelete} />
@@ -247,7 +247,7 @@ function FoodRow({ entry, onDelete }) {
     <li className="flex items-center justify-between gap-3 rounded-xl border border-slate-200/60 px-3 py-2">
       <div className="min-w-0">
         <p className="truncate text-sm text-slate-700">{entry.food_name}</p>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-slate-700">
           {fmtMacro(entry.protein)}g P · {fmtMacro(entry.carbs)}g C · {fmtMacro(entry.fat)}g F ·{' '}
           {fmtMacro(entry.calories)} kcal
         </p>
@@ -255,7 +255,7 @@ function FoodRow({ entry, onDelete }) {
       <button
         type="button"
         onClick={() => onDelete(entry)}
-        className="shrink-0 text-xs text-slate-600 transition hover:text-red-600"
+        className="shrink-0 text-xs text-slate-800 transition hover:text-red-600"
         aria-label={`Remove ${entry.food_name}`}
       >
         Remove

@@ -6,7 +6,7 @@ import { useState } from 'react';
 const fieldCls =
   'mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 ' +
   'placeholder:text-slate-500 focus:border-slate-500 focus:outline-none';
-const labelCls = 'block text-xs font-medium text-slate-600';
+const labelCls = 'block text-xs font-medium text-slate-800';
 
 export default function MilestoneModal({ milestone, exercises, onSave, onClose }) {
   const [form, setForm] = useState(() => ({
@@ -117,12 +117,12 @@ export default function MilestoneModal({ milestone, exercises, onSave, onClose }
           </div>
 
           {form.type === 'weight' && (
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-700">
               Progress is measured from the client&apos;s first logged weight toward the target.
             </p>
           )}
           {form.type === 'exercise' && (
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-700">
               Progress uses the best estimated 1RM across logged sets for that exercise.
             </p>
           )}
@@ -133,7 +133,7 @@ export default function MilestoneModal({ milestone, exercises, onSave, onClose }
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-600 transition hover:bg-slate-100"
+              className="rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-800 transition hover:bg-slate-100"
             >
               Cancel
             </button>

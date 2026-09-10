@@ -36,13 +36,13 @@ export default function WaterCard({ water, onSet }) {
   const current = water?.glasses ?? 0;
 
   return (
-    <div className="rounded-2xl bg-white p-4">
-      <h3 className="font-semibold text-slate-600">Water</h3>
+    <div className="rounded-2xl border border-white/40 bg-white/30 p-4 backdrop-blur-xl">
+      <h3 className="font-semibold text-slate-800">Water</h3>
       <div className="mt-3 flex items-center gap-2">
         <button
           type="button"
           onClick={() => save(Math.max(0, current - 1))}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-600 text-lg text-slate-600 transition hover:bg-slate-100"
+          className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-600 text-lg text-slate-800 transition hover:bg-slate-100"
           aria-label="Remove a glass"
         >
           −
@@ -59,7 +59,7 @@ export default function WaterCard({ water, onSet }) {
           />
           <button
             type="submit"
-            className="rounded-lg border border-slate-600 px-3 py-1.5 text-sm text-slate-600 transition hover:bg-slate-100"
+            className="rounded-lg border border-slate-600 px-3 py-1.5 text-sm text-slate-800 transition hover:bg-slate-100"
           >
             Save
           </button>
@@ -67,13 +67,13 @@ export default function WaterCard({ water, onSet }) {
         <button
           type="button"
           onClick={() => save(current + 1)}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-600 text-lg text-slate-600 transition hover:bg-slate-100"
+          className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-600 text-lg text-slate-800 transition hover:bg-slate-100"
           aria-label="Add a glass"
         >
           +
         </button>
       </div>
-      <p className="mt-2 text-xs text-slate-500">
+      <p className="mt-2 text-xs text-slate-700">
         {current === 0 ? 'No water logged yet.' : `${current} glass${current === 1 ? '' : 'es'} today`}
       </p>
       {error && <p className="mt-1 text-sm text-red-600">{error}</p>}

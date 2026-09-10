@@ -6,7 +6,7 @@ import { useState } from 'react';
 const fieldCls =
   'mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 sm:py-2 text-sm text-slate-900 ' +
   'placeholder:text-slate-500 focus:border-slate-500 focus:outline-none';
-const labelCls = 'block text-xs font-medium text-slate-500';
+const labelCls = 'block text-xs font-medium text-slate-700';
 
 const TARGET_ROWS = [
   { key: 'protein', label: 'Protein', unit: 'g' },
@@ -66,13 +66,13 @@ export default function MealPlanCard({ mealPlan, onSave, onDelete }) {
   }
 
   return (
-    <div className="rounded-2xl bg-white p-4">
+    <div className="rounded-2xl border border-white/40 bg-white/30 p-4 backdrop-blur-xl">
       <div className="flex items-center justify-between gap-2">
-        <h3 className="font-semibold text-slate-600">Meal plan</h3>
+        <h3 className="font-semibold text-slate-800">Meal plan</h3>
         <button
           type="button"
           onClick={mealPlan ? handleDelete : undefined}
-          className="text-xs text-slate-600 transition hover:text-red-600"
+          className="text-xs text-slate-800 transition hover:text-red-600"
         >
           Clear
         </button>
@@ -84,26 +84,26 @@ export default function MealPlanCard({ mealPlan, onSave, onDelete }) {
           <dl className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
             {TARGET_ROWS.map((row) => (
               <div key={row.key} className="rounded-xl border border-slate-200/60 p-2 text-center">
-                <dt className="text-[11px] uppercase tracking-wide text-slate-500">{row.label}</dt>
+                <dt className="text-[11px] uppercase tracking-wide text-slate-700">{row.label}</dt>
                 <dd className="mt-0.5 text-lg font-semibold text-slate-900">
                   {mealPlan[row.key]}
-                  <span className="ml-0.5 text-xs font-normal text-slate-500">{row.unit}</span>
+                  <span className="ml-0.5 text-xs font-normal text-slate-700">{row.unit}</span>
                 </dd>
               </div>
             ))}
           </dl>
-          {mealPlan.notes && <p className="mt-2 text-sm text-slate-500">{mealPlan.notes}</p>}
+          {mealPlan.notes && <p className="mt-2 text-sm text-slate-700">{mealPlan.notes}</p>}
           <button
             type="button"
             onClick={openEditor}
-            className="mt-3 rounded-lg border border-slate-600 px-3 py-1.5 text-sm text-slate-600 transition hover:bg-slate-100"
+            className="mt-3 rounded-lg border border-slate-600 px-3 py-1.5 text-sm text-slate-800 transition hover:bg-slate-100"
           >
             Edit targets
           </button>
         </div>
       ) : (
         <div className="mt-2">
-          <p className="text-sm text-slate-500">No daily targets set yet.</p>
+          <p className="text-sm text-slate-700">No daily targets set yet.</p>
           <button
             type="button"
             onClick={openEditor}
@@ -116,7 +116,7 @@ export default function MealPlanCard({ mealPlan, onSave, onDelete }) {
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-5">
+          <div className="w-full max-w-md rounded-2xl border border-white/40 bg-white/30 p-5 backdrop-blur-xl">
             <h3 className="text-lg font-semibold text-slate-700">{mealPlan ? 'Edit meal plan' : 'Set meal plan'}</h3>
             <form onSubmit={handleSubmit} className="mt-4 space-y-3">
               <div>
@@ -184,7 +184,7 @@ export default function MealPlanCard({ mealPlan, onSave, onDelete }) {
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="rounded-lg border border-slate-600 px-4 py-2 text-sm text-slate-600 transition hover:bg-slate-100"
+                  className="rounded-lg border border-slate-600 px-4 py-2 text-sm text-slate-800 transition hover:bg-slate-100"
                 >
                   Cancel
                 </button>

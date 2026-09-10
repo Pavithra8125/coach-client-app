@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const labelCls = 'block text-xs font-medium text-slate-500';
+const labelCls = 'block text-xs font-medium text-slate-700';
 const fieldCls = 'w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 sm:py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-500 focus:outline-none';
 
 function todayStr() {
@@ -37,7 +37,7 @@ export default function MeasurementForm({ initialData, onSubmit, onCancel }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+    <form onSubmit={handleSubmit} className="space-y-4 rounded-xl border border-white/40 bg-white/30 backdrop-blur-xl p-5 shadow-lg shadow-emerald-900/5">
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className={labelCls} htmlFor="m-date">Date</label>
@@ -118,14 +118,14 @@ export default function MeasurementForm({ initialData, onSubmit, onCancel }) {
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-xl px-5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+            className="rounded-xl px-5 py-2 text-sm font-medium text-slate-800 transition hover:bg-slate-100 hover:text-slate-900"
           >
             Cancel
           </button>
         )}
         <button
           type="submit"
-          className="rounded-xl bg-slate-900 px-5 py-2 text-sm font-bold text-white shadow-sm transition transition hover:bg-slate-800"
+          className="rounded-xl bg-slate-900 px-5 py-2 text-sm font-bold text-white shadow-lg shadow-emerald-900/5 transition transition hover:bg-slate-800"
         >
           {initialData ? 'Save Changes' : 'Log Measurement'}
         </button>

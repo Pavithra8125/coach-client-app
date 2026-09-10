@@ -77,7 +77,7 @@ export default function ClientProgress({ clientId }) {
     }
   };
 
-  if (loading) return <p className="text-slate-500">Loading progress…</p>;
+  if (loading) return <p className="text-slate-700">Loading progress…</p>;
 
   const weightEntries = measurements.filter(m => m.weight_kg != null);
   const latestWeight = weightEntries.length > 0 ? weightEntries[weightEntries.length - 1] : null;
@@ -87,10 +87,10 @@ export default function ClientProgress({ clientId }) {
       <div className="mb-6 flex items-baseline justify-between">
         <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">Progress</h2>
         {latestWeight && (
-          <p className="text-sm font-medium text-slate-500">
+          <p className="text-sm font-medium text-slate-700">
             Latest weight{' '}
             <span className="font-extrabold text-slate-900">{latestWeight.weight_kg} kg</span>
-            <span className="text-slate-400"> · {fmtDate(latestWeight.logged_date)}</span>
+            <span className="text-slate-800"> · {fmtDate(latestWeight.logged_date)}</span>
           </p>
         )}
       </div>
@@ -99,14 +99,14 @@ export default function ClientProgress({ clientId }) {
 
       <div className="grid gap-6 lg:grid-cols-1">
         {/* Graph Section */}
-        <div className="group relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-4.5 shadow-sm transition-all duration-200 hover:border-slate-200 hover:shadow-md">
+        <div className="group relative overflow-hidden rounded-2xl border border-white/40 bg-white/30 backdrop-blur-xl p-4.5 shadow-lg shadow-emerald-900/5 transition-all duration-200 hover:border-white/60 hover:shadow-xl hover:shadow-emerald-900/10">
           <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-slate-600 to-slate-800" />
           <div className="mb-4 flex items-center justify-between">
             <h3 className="text-xl font-extrabold tracking-tight text-slate-900">Trend</h3>
             {!isFormVisible && (
               <button
                 onClick={() => setIsFormVisible(true)}
-                className="rounded-xl bg-slate-900 px-4 py-1.5 text-sm font-bold text-white shadow-sm hover:-translate-y-0.5 hover:bg-slate-800"
+                className="rounded-xl bg-slate-900 px-4 py-1.5 text-sm font-bold text-white shadow-lg shadow-emerald-900/5 hover:-translate-y-0.5 hover:bg-slate-800"
               >
                 + Log Progress
               </button>
@@ -127,7 +127,7 @@ export default function ClientProgress({ clientId }) {
         </div>
 
         {/* History List Section */}
-        <div className="group relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-4.5 shadow-sm transition-all duration-200 hover:border-slate-200 hover:shadow-md">
+        <div className="group relative overflow-hidden rounded-2xl border border-white/40 bg-white/30 backdrop-blur-xl p-4.5 shadow-lg shadow-emerald-900/5 transition-all duration-200 hover:border-white/60 hover:shadow-xl hover:shadow-emerald-900/10">
           <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-slate-600 to-slate-800" />
           <h3 className="mb-4 text-xl font-extrabold tracking-tight text-slate-900">History</h3>
           <MeasurementList 

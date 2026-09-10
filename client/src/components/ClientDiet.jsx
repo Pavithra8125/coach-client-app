@@ -92,7 +92,7 @@ export default function ClientDiet({ clientId }) {
   }
 
   if (loading) {
-    return <p className="mt-8 text-slate-500">Loading diet…</p>;
+    return <p className="mt-8 text-slate-700">Loading diet…</p>;
   }
 
   return (
@@ -100,7 +100,7 @@ export default function ClientDiet({ clientId }) {
       <div className="mb-6 flex items-center justify-between gap-3">
         <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">Diet</h2>
         <div className="flex items-center gap-2">
-          <label htmlFor="diet-track-date" className="text-xs font-medium text-slate-500">
+          <label htmlFor="diet-track-date" className="text-xs font-medium text-slate-700">
             Track date
           </label>
           <input

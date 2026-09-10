@@ -32,10 +32,10 @@ export default function CoachLogCard({ notes, onAdd, onDelete }) {
   }
 
   return (
-    <div className="rounded-2xl bg-white p-4">
+    <div className="rounded-2xl border border-white/40 bg-white/30 p-4 backdrop-blur-xl">
       <div className="flex items-center justify-between gap-2">
-        <h3 className="font-semibold text-slate-600">Coach's log</h3>
-        <span className="text-xs text-slate-600">Private</span>
+        <h3 className="font-semibold text-slate-800">Coach's log</h3>
+        <span className="text-xs text-slate-800">Private</span>
       </div>
 
       <form onSubmit={handleSubmit} className="mt-3 space-y-2">
@@ -66,22 +66,22 @@ export default function CoachLogCard({ notes, onAdd, onDelete }) {
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
 
       {notes.length === 0 ? (
-        <p className="mt-3 text-sm text-slate-500">No notes yet.</p>
+        <p className="mt-3 text-sm text-slate-700">No notes yet.</p>
       ) : (
         <ul className="mt-3 space-y-2">
           {notes.map((n) => (
             <li key={n.id} className="rounded-xl border border-slate-200/60 p-3">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-xs font-medium text-slate-500">{n.date}</span>
+                <span className="text-xs font-medium text-slate-700">{n.date}</span>
                 <button
                   type="button"
                   onClick={() => onDelete(n.id)}
-                  className="text-xs text-slate-600 transition hover:text-red-600"
+                  className="text-xs text-slate-800 transition hover:text-red-600"
                 >
                   Delete
                 </button>
               </div>
-              <p className="mt-1 text-sm text-slate-600">{n.note}</p>
+              <p className="mt-1 text-sm text-slate-800">{n.note}</p>
             </li>
           ))}
         </ul>

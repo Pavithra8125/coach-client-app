@@ -43,12 +43,12 @@ function ChartTooltip({ active, payload, label }) {
     <div className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-md">
       <p className="font-medium text-slate-900">{fmtDate(label)}</p>
       {raw && raw.value != null && (
-        <p className="text-slate-500">
+        <p className="text-slate-700">
           Logged <span className="font-semibold text-slate-900">{raw.value} kg</span>
         </p>
       )}
       {trend && (
-        <p className="text-slate-500">
+        <p className="text-slate-700">
           Trend <span className="font-semibold text-slate-900">{trend.value} kg</span>
         </p>
       )}
@@ -63,7 +63,7 @@ export default function TrendGraph({ measurements }) {
 
   if (chartData.length === 0) {
     return (
-      <div className="flex h-56 items-center justify-center rounded-xl border border-dashed border-slate-200 text-sm text-slate-400">
+      <div className="flex h-56 items-center justify-center rounded-xl border border-dashed border-slate-200 text-sm text-slate-800">
         No weights logged yet.
       </div>
     );
@@ -71,7 +71,7 @@ export default function TrendGraph({ measurements }) {
 
   return (
     <div className="w-full">
-      <div className="mb-2 flex items-center gap-4 text-xs text-slate-500">
+      <div className="mb-2 flex items-center gap-4 text-xs text-slate-700">
         <span className="flex items-center gap-1.5">
           <span className="h-0.5 w-4 rounded-full bg-gradient-to-r from-slate-600 to-slate-800" />
           Trend (EMA)

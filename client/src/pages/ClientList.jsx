@@ -74,7 +74,7 @@ export default function ClientList() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Clients</h1>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-700">
             {clients.length} {clients.length === 1 ? 'client' : 'clients'}
           </p>
         </div>
@@ -89,15 +89,15 @@ export default function ClientList() {
       {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
 
       {loading ? (
-        <p className="text-slate-500">Loading…</p>
+        <p className="text-slate-700">Loading…</p>
       ) : clients.length === 0 ? (
-        <div className="rounded-xl bg-white shadow-sm p-8 text-center text-slate-500">
+        <div className="rounded-xl border border-white/40 bg-white/30 p-8 text-center text-slate-700 shadow-lg shadow-emerald-900/5 backdrop-blur-xl">
           No clients yet — add your first one.
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {clients.map((client) => (
-            <div key={client.id} className="rounded-xl bg-white shadow-sm border border-slate-100 p-4">
+            <div key={client.id} className="rounded-xl border border-white/40 bg-white/30 p-4 shadow-lg shadow-emerald-900/5 backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-900/10">
               <div className="flex items-start gap-3">
                 {client.photo_url ? (
                   <img
@@ -113,28 +113,28 @@ export default function ClientList() {
                 <div className="min-w-0">
                   <Link
                     to={`/clients/${client.id}`}
-                    className="block truncate text-slate-900 font-semibold transition hover:text-slate-600"
+                    className="block truncate font-semibold text-slate-900 transition hover:text-slate-800"
                   >
                     {client.name}
                   </Link>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-slate-800">
                     {client.start_date ? `Since ${client.start_date}` : 'No start date'}
                   </p>
                   {client.goals && (
-                    <p className="mt-1 truncate text-sm text-slate-600">{client.goals}</p>
+                    <p className="mt-1 truncate text-sm text-slate-800">{client.goals}</p>
                   )}
                 </div>
               </div>
               <div className="mt-3 flex justify-end gap-2">
                 <button
                   onClick={() => openEdit(client)}
-                  className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-900"
+                  className="rounded-lg border border-white/60 bg-white/80 px-3 py-1.5 text-xs font-medium text-slate-800 transition hover:bg-white hover:text-slate-900"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => handleDelete(client)}
-                  className="rounded-lg border border-red-200 bg-white px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-50 hover:text-red-700"
+                  className="rounded-lg border border-red-200 bg-white/80 px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-50 hover:text-red-700"
                 >
                   Delete
                 </button>

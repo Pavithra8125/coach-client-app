@@ -85,7 +85,7 @@ function Heatmap({ heatmap }) {
   const weeks = buildWeeks(heatmap);
   if (weeks.length === 0) {
     return (
-      <p className="mt-3 rounded-xl border border-dashed border-slate-200 px-3 py-4 text-center text-sm text-slate-500">
+      <p className="mt-3 rounded-xl border border-dashed border-slate-200 px-3 py-4 text-center text-sm text-slate-700">
         No workouts logged yet — the calendar fills in as sessions are added.
       </p>
     );
@@ -94,7 +94,7 @@ function Heatmap({ heatmap }) {
   return (
     <div className="mt-3 overflow-x-auto">
       <div className="flex">
-        <div className="flex w-6 flex-col gap-[3px] pt-5 text-[10px] font-medium leading-3 text-slate-500">
+        <div className="flex w-6 flex-col gap-[3px] pt-5 text-[10px] font-medium leading-3 text-slate-700">
           {['Mon', '', 'Wed', '', 'Fri', '', ''].map((l, i) => (
             <span key={i} className="h-3">
               {l}
@@ -102,7 +102,7 @@ function Heatmap({ heatmap }) {
           ))}
         </div>
         <div>
-          <div className="relative h-4 text-[10px] font-medium text-slate-500">
+          <div className="relative h-4 text-[10px] font-medium text-slate-700">
             {labels.map(({ index, label }) => (
               <span key={index} className="absolute" style={{ left: `${index * 15}px` }}>
                 {label}
@@ -133,7 +133,7 @@ function Heatmap({ heatmap }) {
           </div>
         </div>
       </div>
-      <div className="mt-3 flex items-center justify-end gap-1.5 text-[11px] font-medium text-slate-500">
+      <div className="mt-3 flex items-center justify-end gap-1.5 text-[11px] font-medium text-slate-700">
         <span>Less</span>
         {HEAT.map((color) => (
           <span
@@ -150,13 +150,13 @@ function Heatmap({ heatmap }) {
 
 function StreakCard({ icon, label, value, unit, accent }) {
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-4.5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
+    <div className="group relative overflow-hidden rounded-2xl border border-white/40 bg-white/30 backdrop-blur-xl p-4.5 shadow-lg shadow-emerald-900/5 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/60 hover:shadow-xl hover:shadow-emerald-900/10">
       {/* Top accent bar */}
       <div className={`absolute left-0 right-0 top-0 h-1 bg-gradient-to-r ${accent.bar}`} />
 
       <div className="flex items-center justify-between">
         <div
-          className={`flex h-10 w-10 items-center justify-center rounded-xl border text-lg shadow-sm ${accent.badge}`}
+          className={`flex h-10 w-10 items-center justify-center rounded-xl border text-lg shadow-lg shadow-emerald-900/5 ${accent.badge}`}
         >
           {icon}
         </div>
@@ -165,8 +165,8 @@ function StreakCard({ icon, label, value, unit, accent }) {
       <p className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
         {value}
       </p>
-      <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-slate-500">{label}</p>
-      <p className="text-xs text-slate-500">{unit}</p>
+      <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-slate-700">{label}</p>
+      <p className="text-xs text-slate-700">{unit}</p>
     </div>
   );
 }
@@ -178,7 +178,7 @@ function BadgeTile({ badge }) {
       className={`group relative overflow-hidden rounded-2xl border p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${
         locked
           ? 'border-slate-100 bg-white/50 opacity-75 hover:border-slate-200 hover:opacity-100'
-          : 'border-emerald-500/30 bg-gradient-to-b from-emerald-950/30 to-slate-800/90 shadow-sm'
+          : 'border-emerald-500/30 bg-gradient-to-b from-emerald-950/30 to-slate-800/90 shadow-lg shadow-emerald-900/5'
       }`}
     >
       <div className="flex items-start justify-between gap-2">
@@ -186,7 +186,7 @@ function BadgeTile({ badge }) {
           className={`flex h-11 w-11 items-center justify-center rounded-xl border text-2xl transition-transform duration-200 group-hover:scale-105 ${
             locked
               ? 'border-slate-100 bg-white/60 grayscale opacity-50'
-              : 'border-emerald-500/30 bg-emerald-500/10 shadow-sm'
+              : 'border-emerald-500/30 bg-emerald-500/10 shadow-lg shadow-emerald-900/5'
           }`}
         >
           {badge.icon}
@@ -196,16 +196,16 @@ function BadgeTile({ badge }) {
             ✓ Earned
           </span>
         ) : (
-          <span className="rounded-full border border-slate-100 bg-white/80 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-slate-500">
+          <span className="rounded-full border border-white/40 bg-white/30 backdrop-blur-xl/80 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-slate-700">
             Locked
           </span>
         )}
       </div>
 
-      <p className={`mt-3 text-sm font-bold tracking-tight ${locked ? 'text-slate-500' : 'text-slate-900'}`}>
+      <p className={`mt-3 text-sm font-bold tracking-tight ${locked ? 'text-slate-700' : 'text-slate-900'}`}>
         {badge.name}
       </p>
-      <p className="mt-0.5 text-xs text-slate-500">{badge.description}</p>
+      <p className="mt-0.5 text-xs text-slate-700">{badge.description}</p>
 
       {badge.earned && badge.earned_at && (
         <p className="mt-2 text-[11px] font-medium text-emerald-600/90">
@@ -221,7 +221,7 @@ function BadgeTile({ badge }) {
               style={{ width: `${Math.max(0, Math.min(100, badge.progress_pct))}%` }}
             />
           </div>
-          <p className="mt-1.5 text-[11px] font-medium text-slate-500">{badge.progress_label}</p>
+          <p className="mt-1.5 text-[11px] font-medium text-slate-700">{badge.progress_label}</p>
         </div>
       )}
     </div>
@@ -236,13 +236,13 @@ function MilestoneRow({ m, onEdit, onDelete }) {
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="truncate font-semibold text-slate-900">{title}</p>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-700">
             {m.current != null ? (
               <span className="font-semibold text-slate-700">{m.current} {m.unit}</span>
             ) : (
               'No data logged yet'
             )}
-            <span className="text-slate-500"> · target {m.target} {m.unit}</span>
+            <span className="text-slate-700"> · target {m.target} {m.unit}</span>
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-3">
@@ -253,7 +253,7 @@ function MilestoneRow({ m, onEdit, onDelete }) {
           ) : (
             m.current != null &&
             m.remaining != null && (
-              <span className="whitespace-nowrap text-xs font-medium text-slate-600">
+              <span className="whitespace-nowrap text-xs font-medium text-slate-800">
                 <span className="font-bold text-slate-900">{m.remaining}</span> {m.unit} to go
               </span>
             )
@@ -261,13 +261,13 @@ function MilestoneRow({ m, onEdit, onDelete }) {
           <div className="flex items-center gap-2">
             <button
               onClick={() => onEdit(m)}
-              className="text-xs font-medium text-slate-500 transition hover:text-slate-700"
+              className="text-xs font-medium text-slate-700 transition hover:text-slate-700"
             >
               Edit
             </button>
             <button
               onClick={() => onDelete(m)}
-              className="text-xs font-medium text-slate-500 transition hover:text-red-600"
+              className="text-xs font-medium text-slate-700 transition hover:text-red-600"
             >
               Delete
             </button>
@@ -343,7 +343,7 @@ export default function ClientGamification({ clientId }) {
     }
   }
 
-  if (loading) return <p className="mt-8 text-slate-500">Loading gamification…</p>;
+  if (loading) return <p className="mt-8 text-slate-700">Loading gamification…</p>;
 
   const streakStats = streak
     ? [
@@ -403,14 +403,14 @@ export default function ClientGamification({ clientId }) {
       </div>
 
       {/* Heatmap */}
-      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div className="mt-6 rounded-2xl border border-white/40 bg-white/30 backdrop-blur-xl p-5 shadow-lg shadow-emerald-900/5">
         <h3 className="mb-1 text-xl font-extrabold tracking-tight text-slate-900">Workout calendar</h3>
-        <p className="text-xs text-slate-500 mb-4">Sets logged per day, over the last six months.</p>
+        <p className="text-xs text-slate-700 mb-4">Sets logged per day, over the last six months.</p>
         <Heatmap heatmap={heatmap} />
       </div>
 
       {/* Badges */}
-      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div className="mt-6 rounded-2xl border border-white/40 bg-white/30 backdrop-blur-xl p-5 shadow-lg shadow-emerald-900/5">
         <h3 className="mb-4 text-xl font-extrabold tracking-tight text-slate-900">Achievements</h3>
         <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {badges.map((b) => (
@@ -420,23 +420,23 @@ export default function ClientGamification({ clientId }) {
       </div>
 
       {/* Milestones */}
-      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div className="mt-6 rounded-2xl border border-white/40 bg-white/30 backdrop-blur-xl p-5 shadow-lg shadow-emerald-900/5">
         <div className="flex items-center justify-between gap-3 mb-4">
           <div>
             <h3 className="text-xl font-extrabold tracking-tight text-slate-900">Milestones</h3>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-slate-700 mt-1">
               Coach-set targets with live progress toward them.
             </p>
           </div>
           <button
             onClick={() => openModal(null)}
-            className="shrink-0 rounded-lg bg-slate-900 px-4 py-2 text-sm font-bold text-white shadow-sm transition-all hover:bg-slate-800 hover:shadow-xl"
+            className="shrink-0 rounded-lg bg-slate-900 px-4 py-2 text-sm font-bold text-white shadow-lg shadow-emerald-900/5 transition-all hover:bg-slate-800 hover:shadow-xl"
           >
             Add target
           </button>
         </div>
         {milestones.length === 0 ? (
-          <p className="mt-3 rounded-xl border border-dashed border-slate-200 px-3 py-4 text-center text-sm text-slate-500">
+          <p className="mt-3 rounded-xl border border-dashed border-slate-200 px-3 py-4 text-center text-sm text-slate-700">
             No targets set yet — add a body-weight or lift target to track.
           </p>
         ) : (

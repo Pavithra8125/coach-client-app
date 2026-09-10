@@ -75,7 +75,7 @@ export default function ClientWorkouts({ clientId }) {
   }
 
   if (loading) {
-    return <p className="mt-8 text-slate-500">Loading workouts…</p>;
+    return <p className="mt-8 text-slate-700">Loading workouts…</p>;
   }
 
   return (

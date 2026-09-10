@@ -41,12 +41,12 @@ export default function SupplementCard({ supplements, taken, onSetTaken, onAdd, 
   }
 
   return (
-    <div className="rounded-2xl bg-white p-4">
-      <h3 className="font-semibold text-slate-600">Supplements</h3>
+    <div className="rounded-2xl border border-white/40 bg-white/30 p-4 backdrop-blur-xl">
+      <h3 className="font-semibold text-slate-800">Supplements</h3>
 
       <ul className="mt-3 space-y-1.5">
         {supplements.length === 0 ? (
-          <p className="text-sm text-slate-500">No supplements on the list yet.</p>
+          <p className="text-sm text-slate-700">No supplements on the list yet.</p>
         ) : (
           supplements.map((supp) => {
             const checked = taken.includes(supp.id);
@@ -63,14 +63,14 @@ export default function SupplementCard({ supplements, taken, onSetTaken, onAdd, 
                     onChange={(e) => toggle(supp, e.target.checked)}
                     className="h-4 w-4 accent-slate-900"
                   />
-                  <span className={`truncate text-sm ${checked ? 'text-slate-500 line-through' : 'text-slate-700'}`}>
+                  <span className={`truncate text-sm ${checked ? 'text-slate-700 line-through' : 'text-slate-700'}`}>
                     {supp.name}
                   </span>
                 </label>
                 <button
                   type="button"
                   onClick={() => handleDelete(supp)}
-                  className="shrink-0 text-xs text-slate-600 transition hover:text-red-600"
+                  className="shrink-0 text-xs text-slate-800 transition hover:text-red-600"
                   aria-label={`Remove ${supp.name}`}
                 >
                   ×
@@ -92,7 +92,7 @@ export default function SupplementCard({ supplements, taken, onSetTaken, onAdd, 
         />
         <button
           type="submit"
-          className="rounded-lg border border-slate-600 px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100"
+          className="rounded-lg border border-slate-600 px-3 py-2 text-sm text-slate-800 transition hover:bg-slate-100"
         >
           Add
         </button>

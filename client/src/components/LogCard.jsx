@@ -24,7 +24,7 @@ const fieldCls =
 const setCls =
   'w-20 rounded-lg border border-slate-200 bg-white px-2 py-2 sm:py-1.5 text-sm text-slate-900 ' +
   'focus:border-slate-500 focus:outline-none';
-const labelCls = 'block text-xs font-medium text-slate-500';
+const labelCls = 'block text-xs font-medium text-slate-700';
 
 export default function LogCard({ clientId, plan, exercises, sessions, onSaved }) {
   const [date, setDate] = useState(todayStr());
@@ -162,7 +162,7 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
   const totalSets = sessions.reduce((n, s) => n + s.exercises.reduce((m, ex) => m + ex.sets.length, 0), 0);
 
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
+    <div className="group relative overflow-hidden rounded-2xl border border-white/40 bg-white/30 backdrop-blur-xl p-5 shadow-lg shadow-emerald-900/5 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/60 hover:shadow-xl hover:shadow-emerald-900/10">
       <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-slate-600 to-slate-800" />
       <h3 className="mb-4 text-xl font-extrabold tracking-tight text-slate-900">Log workout</h3>
 
@@ -197,7 +197,7 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
         </div>
 
         {rows.length === 0 ? (
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-700">
             Pick a plan day above, or add an exercise below to log a free session.
           </p>
         ) : null}
@@ -209,7 +209,7 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
               <button
                 type="button"
                 onClick={() => removeRow(row.key)}
-                className="text-xs text-slate-500 transition hover:text-red-600"
+                className="text-xs text-slate-700 transition hover:text-red-600"
               >
                 Remove
               </button>
@@ -217,8 +217,8 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
             <div className="mt-2 space-y-2">
               {row.sets.map((set, idx) => (
                 <div key={idx} className="flex items-center gap-2">
-                  <span className="w-10 text-xs text-slate-500">Set {idx + 1}</span>
-                  <label className="flex items-center gap-1.5 text-xs text-slate-500">
+                  <span className="w-10 text-xs text-slate-700">Set {idx + 1}</span>
+                  <label className="flex items-center gap-1.5 text-xs text-slate-700">
                     kg
                     <input
                       type="number"
@@ -230,7 +230,7 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
                       className={setCls}
                     />
                   </label>
-                  <label className="flex items-center gap-1.5 text-xs text-slate-500">
+                  <label className="flex items-center gap-1.5 text-xs text-slate-700">
                     reps
                     <input
                       type="number"
@@ -246,7 +246,7 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
                     type="button"
                     onClick={() => removeSet(row.key, idx)}
                     disabled={row.sets.length === 1}
-                    className="text-xs text-slate-600 transition hover:text-red-600 disabled:opacity-30"
+                    className="text-xs text-slate-800 transition hover:text-red-600 disabled:opacity-30"
                     aria-label="Remove set"
                   >
                     ×
@@ -257,7 +257,7 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
             <button
               type="button"
               onClick={() => addSet(row.key)}
-              className="mt-2 text-xs text-slate-600 transition hover:text-slate-400"
+              className="mt-2 text-xs text-slate-800 transition hover:text-slate-800"
             >
               + Add set
             </button>
@@ -286,7 +286,7 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
           <button
             type="button"
             onClick={addManualExercise}
-            className="rounded-lg border border-slate-600 px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100"
+            className="rounded-lg border border-slate-600 px-3 py-2 text-sm text-slate-800 transition hover:bg-slate-100"
           >
             Add
           </button>
@@ -311,21 +311,21 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
         <button
           type="submit"
           disabled={saving}
-          className="w-full rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+          className="w-full rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-emerald-900/5 transition-all hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
         >
           {saving ? 'Saving…' : 'Save workout'}
         </button>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-slate-700">
           Saving again for the same date replaces that day&apos;s workout.
         </p>
       </form>
 
       <div className="mt-5">
-        <h4 className="mb-2 text-sm font-semibold text-slate-600">
+        <h4 className="mb-2 text-sm font-semibold text-slate-800">
           Recent sessions{sessions.length > 0 ? ` (${totalSets} sets)` : ''}
         </h4>
         {sessions.length === 0 ? (
-          <p className="text-sm text-slate-500">No sessions logged yet.</p>
+          <p className="text-sm text-slate-700">No sessions logged yet.</p>
         ) : (
           <>
             <ul className="space-y-2">
@@ -334,7 +334,7 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
                   <div className="flex items-center justify-between gap-2">
                     <div className="min-w-0">
                       <p className="text-sm font-medium text-slate-700">{fmtDate(session.date)}</p>
-                      <p className="truncate text-xs text-slate-500">
+                      <p className="truncate text-xs text-slate-700">
                         {session.day_name ?? 'Free session'} · {session.exercises.length}{' '}
                         exercise{session.exercises.length === 1 ? '' : 's'} ·{' '}
                         {session.exercises.reduce((n, ex) => n + ex.sets.length, 0)} sets
@@ -345,14 +345,14 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
                       <button
                         type="button"
                         onClick={() => loadSession(session)}
-                        className="text-xs font-medium text-slate-500 transition hover:text-slate-900"
+                        className="text-xs font-medium text-slate-700 transition hover:text-slate-900"
                       >
                         Load
                       </button>
                       <button
                         type="button"
                         onClick={() => handleDelete(session)}
-                        className="text-xs font-medium text-slate-500 transition hover:text-red-600"
+                        className="text-xs font-medium text-slate-700 transition hover:text-red-600"
                       >
                         Delete
                       </button>
@@ -365,7 +365,7 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
               <button
                 type="button"
                 onClick={() => setVisibleCount((c) => c + 8)}
-                className="mt-4 w-full rounded-xl border border-slate-200 py-2.5 text-sm font-bold text-slate-600 shadow-sm transition-all hover:bg-slate-50 hover:text-slate-900"
+                className="mt-4 w-full rounded-xl border border-slate-200 py-2.5 text-sm font-bold text-slate-800 shadow-lg shadow-emerald-900/5 transition-all hover:bg-slate-50 hover:text-slate-900"
               >
                 Load more
               </button>

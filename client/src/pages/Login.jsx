@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
+import bgNature from '../assets/bg-nature.avif';
 
 export default function Login() {
   const { user, login } = useAuth();
@@ -36,12 +37,20 @@ export default function Login() {
     'placeholder-slate-500 outline-none focus:border-slate-500';
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
-      <form onSubmit={handleSubmit} className="w-full max-w-sm rounded-2xl bg-white border border-slate-200 p-8 shadow-xl">
-        <h1 className="text-2xl font-bold text-slate-900">Coach&apos;s Client App</h1>
-        <p className="mb-6 mt-1 text-sm text-slate-500">Sign in to manage your clients.</p>
+    <div className="relative flex min-h-screen items-center justify-center px-4">
+      {/* Background Image Layer with soft overlay */}
+      <div 
+        className="pointer-events-none fixed inset-0 -z-10 bg-cover bg-center bg-fixed"
+        style={{ backgroundImage: `url(${bgNature})` }}
+      >
+        <div className="absolute inset-0 bg-emerald-200/30" />
+      </div>
 
-        <label htmlFor="username" className="block text-sm font-medium text-slate-600">
+      <form onSubmit={handleSubmit} className="w-full max-w-sm rounded-2xl border border-white/50 bg-white/95 p-8 shadow-2xl shadow-emerald-900/10 backdrop-blur-xl">
+        <h1 className="text-2xl font-bold text-slate-900">Coach&apos;s Client App</h1>
+        <p className="mb-6 mt-1 text-sm text-slate-700">Sign in to manage your clients.</p>
+
+        <label htmlFor="username" className="block text-sm font-medium text-slate-800">
           Username
         </label>
         <input
@@ -54,7 +63,7 @@ export default function Login() {
           className={inputClass}
         />
 
-        <label htmlFor="password" className="mt-4 block text-sm font-medium text-slate-600">
+        <label htmlFor="password" className="mt-4 block text-sm font-medium text-slate-800">
           Password
         </label>
         <input

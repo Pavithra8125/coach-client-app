@@ -53,11 +53,11 @@ export default function ClientFormModal({ client, onClose, onSaved }) {
       <form
         onSubmit={handleSubmit}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md rounded-2xl bg-slate-50 p-6 shadow-xl"
+        className="w-full max-w-md rounded-2xl border border-white/50 bg-white/95 p-6 shadow-2xl shadow-emerald-900/10 backdrop-blur-xl"
       >
         <h2 className="text-xl font-bold text-slate-900">{isEdit ? 'Edit client' : 'Add client'}</h2>
 
-        <label htmlFor="client-name" className="mt-4 block text-sm font-medium text-slate-600">
+        <label htmlFor="client-name" className="mt-4 block text-sm font-medium text-slate-800">
           Name *
         </label>
         <input
@@ -69,7 +69,7 @@ export default function ClientFormModal({ client, onClose, onSaved }) {
           className={inputClass}
         />
 
-        <label htmlFor="client-photo" className="mt-4 block text-sm font-medium text-slate-600">
+        <label htmlFor="client-photo" className="mt-4 block text-sm font-medium text-slate-800">
           Photo URL
         </label>
         <input
@@ -81,7 +81,7 @@ export default function ClientFormModal({ client, onClose, onSaved }) {
           className={inputClass}
         />
 
-        <label htmlFor="client-goals" className="mt-4 block text-sm font-medium text-slate-600">
+        <label htmlFor="client-goals" className="mt-4 block text-sm font-medium text-slate-800">
           Goals
         </label>
         <textarea
@@ -93,7 +93,7 @@ export default function ClientFormModal({ client, onClose, onSaved }) {
           className={inputClass}
         />
 
-        <label htmlFor="client-start" className="mt-4 block text-sm font-medium text-slate-600">
+        <label htmlFor="client-start" className="mt-4 block text-sm font-medium text-slate-800">
           Start date
         </label>
         <input
@@ -110,7 +110,7 @@ export default function ClientFormModal({ client, onClose, onSaved }) {
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-600 transition hover:bg-slate-100"
+            className="rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-800 transition hover:bg-slate-100"
           >
             Cancel
           </button>

@@ -63,13 +63,13 @@ export default function DayModal({ day, exercises, onAddExercise, onSave, onClos
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl"
+        className="w-full max-w-lg rounded-2xl border border-white/50 bg-white/95 p-6 backdrop-blur-xl shadow-2xl"
       >
         <h2 className="text-xl font-bold text-slate-900">
           {isEdit ? 'Edit workout day' : 'Add workout day'}
         </h2>
 
-        <label htmlFor="day-name" className="mt-4 block text-sm font-medium text-slate-600">
+        <label htmlFor="day-name" className="mt-4 block text-sm font-medium text-slate-800">
           Day name *
         </label>
         <input
@@ -82,10 +82,10 @@ export default function DayModal({ day, exercises, onAddExercise, onSave, onClos
           className={inputClass}
         />
 
-        <p className="mt-4 text-sm font-medium text-slate-600">Exercises</p>
+        <p className="mt-4 text-sm font-medium text-slate-800">Exercises</p>
         <div className="mt-2 max-h-56 overflow-y-auto rounded-lg border border-slate-200">
           {exercises.length === 0 ? (
-            <p className="p-3 text-sm text-slate-500">No exercises in the library yet — add one below.</p>
+            <p className="p-3 text-sm text-slate-700">No exercises in the library yet — add one below.</p>
           ) : (
             <ul className="divide-y divide-slate-700/60">
               {exercises.map((exercise) => (
@@ -98,7 +98,7 @@ export default function DayModal({ day, exercises, onAddExercise, onSave, onClos
                       className="h-4 w-4 accent-slate-900"
                     />
                     <span className="text-slate-700">{exercise.name}</span>
-                    {exercise.category && <span className="text-xs text-slate-500">{exercise.category}</span>}
+                    {exercise.category && <span className="text-xs text-slate-700">{exercise.category}</span>}
                   </label>
                 </li>
               ))}
@@ -128,7 +128,7 @@ export default function DayModal({ day, exercises, onAddExercise, onSave, onClos
           </select>
           <button
             type="submit"
-            className="shrink-0 rounded-lg border border-slate-600 px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100"
+            className="shrink-0 rounded-lg border border-slate-600 px-3 py-2 text-sm text-slate-800 transition hover:bg-slate-100"
           >
             Add
           </button>
@@ -140,7 +140,7 @@ export default function DayModal({ day, exercises, onAddExercise, onSave, onClos
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-600 transition hover:bg-slate-100"
+            className="rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-800 transition hover:bg-slate-100"
           >
             Cancel
           </button>
