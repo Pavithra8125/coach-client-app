@@ -85,7 +85,7 @@ function Heatmap({ heatmap }) {
   const weeks = buildWeeks(heatmap);
   if (weeks.length === 0) {
     return (
-      <p className="mt-3 rounded-xl border border-dashed border-slate-700/80 px-3 py-4 text-center text-sm text-slate-400">
+      <p className="mt-3 rounded-xl border border-dashed border-slate-200 px-3 py-4 text-center text-sm text-slate-500">
         No workouts logged yet — the calendar fills in as sessions are added.
       </p>
     );
@@ -94,7 +94,7 @@ function Heatmap({ heatmap }) {
   return (
     <div className="mt-3 overflow-x-auto">
       <div className="flex">
-        <div className="flex w-6 flex-col gap-[3px] pt-5 text-[10px] font-medium leading-3 text-slate-400">
+        <div className="flex w-6 flex-col gap-[3px] pt-5 text-[10px] font-medium leading-3 text-slate-500">
           {['Mon', '', 'Wed', '', 'Fri', '', ''].map((l, i) => (
             <span key={i} className="h-3">
               {l}
@@ -102,7 +102,7 @@ function Heatmap({ heatmap }) {
           ))}
         </div>
         <div>
-          <div className="relative h-4 text-[10px] font-medium text-slate-400">
+          <div className="relative h-4 text-[10px] font-medium text-slate-500">
             {labels.map(({ index, label }) => (
               <span key={index} className="absolute" style={{ left: `${index * 15}px` }}>
                 {label}
@@ -121,7 +121,7 @@ function Heatmap({ heatmap }) {
                         className="h-3 w-3 rounded-[3px] border border-black/20 transition-transform duration-150 hover:scale-125"
                         style={{ background: heatColor(cell.count) }}
                       />
-                      <div className="pointer-events-none invisible absolute left-1/2 top-full z-10 mt-1 -translate-x-1/2 whitespace-nowrap rounded-md border border-slate-700 bg-slate-950 px-2 py-1 text-[11px] font-medium text-slate-200 opacity-0 shadow-xl transition-opacity group-hover:visible group-hover:opacity-100">
+                      <div className="pointer-events-none invisible absolute left-1/2 top-full z-10 mt-1 -translate-x-1/2 whitespace-nowrap rounded-md border border-slate-200 bg-slate-950 px-2 py-1 text-[11px] font-medium text-slate-700 opacity-0 shadow-xl transition-opacity group-hover:visible group-hover:opacity-100">
                         {fmtDate(cell.date)} ·{' '}
                         {cell.count === 0 ? 'No workout' : `${cell.count} ${cell.count === 1 ? 'set' : 'sets'}`}
                       </div>
@@ -133,7 +133,7 @@ function Heatmap({ heatmap }) {
           </div>
         </div>
       </div>
-      <div className="mt-3 flex items-center justify-end gap-1.5 text-[11px] font-medium text-slate-400">
+      <div className="mt-3 flex items-center justify-end gap-1.5 text-[11px] font-medium text-slate-500">
         <span>Less</span>
         {HEAT.map((color) => (
           <span
@@ -150,7 +150,7 @@ function Heatmap({ heatmap }) {
 
 function StreakCard({ icon, label, value, unit, accent }) {
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-800/90 p-4.5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
+    <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-4.5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
       {/* Top accent bar */}
       <div className={`absolute left-0 right-0 top-0 h-1 bg-gradient-to-r ${accent.bar}`} />
 
@@ -162,10 +162,10 @@ function StreakCard({ icon, label, value, unit, accent }) {
         </div>
       </div>
 
-      <p className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+      <p className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
         {value}
       </p>
-      <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-slate-400">{label}</p>
+      <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-slate-500">{label}</p>
       <p className="text-xs text-slate-500">{unit}</p>
     </div>
   );
@@ -177,7 +177,7 @@ function BadgeTile({ badge }) {
     <div
       className={`group relative overflow-hidden rounded-2xl border p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${
         locked
-          ? 'border-slate-800 bg-slate-900/50 opacity-75 hover:border-slate-700 hover:opacity-100'
+          ? 'border-slate-100 bg-white/50 opacity-75 hover:border-slate-200 hover:opacity-100'
           : 'border-emerald-500/30 bg-gradient-to-b from-emerald-950/30 to-slate-800/90 shadow-sm'
       }`}
     >
@@ -185,43 +185,43 @@ function BadgeTile({ badge }) {
         <div
           className={`flex h-11 w-11 items-center justify-center rounded-xl border text-2xl transition-transform duration-200 group-hover:scale-105 ${
             locked
-              ? 'border-slate-800 bg-slate-800/60 grayscale opacity-50'
+              ? 'border-slate-100 bg-white/60 grayscale opacity-50'
               : 'border-emerald-500/30 bg-emerald-500/10 shadow-sm'
           }`}
         >
           {badge.icon}
         </div>
         {badge.earned ? (
-          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/15 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-400">
+          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/15 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-600">
             ✓ Earned
           </span>
         ) : (
-          <span className="rounded-full border border-slate-800 bg-slate-800/80 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-slate-500">
+          <span className="rounded-full border border-slate-100 bg-white/80 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-slate-500">
             Locked
           </span>
         )}
       </div>
 
-      <p className={`mt-3 text-sm font-bold tracking-tight ${locked ? 'text-slate-400' : 'text-slate-100'}`}>
+      <p className={`mt-3 text-sm font-bold tracking-tight ${locked ? 'text-slate-500' : 'text-slate-900'}`}>
         {badge.name}
       </p>
-      <p className="mt-0.5 text-xs text-slate-400">{badge.description}</p>
+      <p className="mt-0.5 text-xs text-slate-500">{badge.description}</p>
 
       {badge.earned && badge.earned_at && (
-        <p className="mt-2 text-[11px] font-medium text-emerald-400/90">
+        <p className="mt-2 text-[11px] font-medium text-emerald-600/90">
           Unlocked {fmtDate(badge.earned_at)}
         </p>
       )}
 
       {locked && badge.progress_pct != null && (
         <div className="mt-3">
-          <div className="h-2 overflow-hidden rounded-full bg-slate-950/80 p-0.5 border border-slate-800/60">
+          <div className="h-2 overflow-hidden rounded-full bg-slate-100 p-0.5 border border-slate-200">
             <div
               className="h-full rounded-full bg-gradient-to-r from-orange-500 via-amber-400 to-emerald-400 transition-all duration-500 ease-out"
               style={{ width: `${Math.max(0, Math.min(100, badge.progress_pct))}%` }}
             />
           </div>
-          <p className="mt-1.5 text-[11px] font-medium text-slate-400">{badge.progress_label}</p>
+          <p className="mt-1.5 text-[11px] font-medium text-slate-500">{badge.progress_label}</p>
         </div>
       )}
     </div>
@@ -232,13 +232,13 @@ function MilestoneRow({ m, onEdit, onDelete }) {
   const title = m.label || (m.type === 'exercise' ? m.exercise_name : 'Body weight');
   const hasProgress = m.progress_pct != null;
   return (
-    <li className="group rounded-xl border border-slate-700/60 bg-slate-800/60 p-3.5 transition-all duration-200 hover:border-slate-600 hover:bg-slate-800/90">
+    <li className="group rounded-xl border border-slate-200/60 bg-white/60 p-3.5 transition-all duration-200 hover:border-slate-600 hover:bg-white border-slate-100">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="truncate font-semibold text-slate-100">{title}</p>
-          <p className="text-xs text-slate-400">
+          <p className="truncate font-semibold text-slate-900">{title}</p>
+          <p className="text-xs text-slate-500">
             {m.current != null ? (
-              <span className="font-semibold text-slate-200">{m.current} {m.unit}</span>
+              <span className="font-semibold text-slate-700">{m.current} {m.unit}</span>
             ) : (
               'No data logged yet'
             )}
@@ -247,27 +247,27 @@ function MilestoneRow({ m, onEdit, onDelete }) {
         </div>
         <div className="flex shrink-0 items-center gap-3">
           {m.reached ? (
-            <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-emerald-500/30 bg-emerald-500/15 px-2.5 py-0.5 text-xs font-semibold text-emerald-400">
+            <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-emerald-500/30 bg-emerald-500/15 px-2.5 py-0.5 text-xs font-semibold text-emerald-600">
               Reached 🎉
             </span>
           ) : (
             m.current != null &&
             m.remaining != null && (
-              <span className="whitespace-nowrap text-xs font-medium text-slate-300">
-                <span className="font-bold text-white">{m.remaining}</span> {m.unit} to go
+              <span className="whitespace-nowrap text-xs font-medium text-slate-600">
+                <span className="font-bold text-slate-900">{m.remaining}</span> {m.unit} to go
               </span>
             )
           )}
           <div className="flex items-center gap-2">
             <button
               onClick={() => onEdit(m)}
-              className="text-xs font-medium text-slate-400 transition hover:text-slate-200"
+              className="text-xs font-medium text-slate-500 transition hover:text-slate-700"
             >
               Edit
             </button>
             <button
               onClick={() => onDelete(m)}
-              className="text-xs font-medium text-slate-500 transition hover:text-red-400"
+              className="text-xs font-medium text-slate-500 transition hover:text-red-600"
             >
               Delete
             </button>
@@ -275,7 +275,7 @@ function MilestoneRow({ m, onEdit, onDelete }) {
         </div>
       </div>
       {hasProgress && (
-        <div className="mt-2.5 h-2 overflow-hidden rounded-full bg-slate-950/80 p-0.5 border border-slate-800/60">
+        <div className="mt-2.5 h-2 overflow-hidden rounded-full bg-slate-100 p-0.5 border border-slate-200">
           <div
             className="h-full rounded-full bg-gradient-to-r from-blue-500 via-cyan-400 to-emerald-400 transition-all duration-500 ease-out"
             style={{ width: `${Math.max(0, Math.min(100, m.progress_pct))}%` }}
@@ -343,7 +343,7 @@ export default function ClientGamification({ clientId }) {
     }
   }
 
-  if (loading) return <p className="mt-8 text-slate-400">Loading gamification…</p>;
+  if (loading) return <p className="mt-8 text-slate-500">Loading gamification…</p>;
 
   const streakStats = streak
     ? [
@@ -354,7 +354,7 @@ export default function ClientGamification({ clientId }) {
           unit: streak.current_days === 1 ? 'day logged in a row' : 'days logged in a row',
           accent: {
             bar: 'from-orange-500 to-amber-500',
-            badge: 'border-orange-500/30 bg-orange-500/10 text-orange-400',
+            badge: 'border-orange-500/30 bg-orange-500/10 text-orange-600',
           },
         },
         {
@@ -364,7 +364,7 @@ export default function ClientGamification({ clientId }) {
           unit: 'days',
           accent: {
             bar: 'from-amber-500 to-yellow-400',
-            badge: 'border-amber-500/30 bg-amber-500/10 text-amber-400',
+            badge: 'border-amber-500/30 bg-amber-500/10 text-amber-600',
           },
         },
         {
@@ -374,7 +374,7 @@ export default function ClientGamification({ clientId }) {
           unit: streak.current_weeks === 1 ? 'week in a row' : 'weeks in a row',
           accent: {
             bar: 'from-emerald-500 to-teal-400',
-            badge: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400',
+            badge: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600',
           },
         },
         {
@@ -384,16 +384,16 @@ export default function ClientGamification({ clientId }) {
           unit: 'weeks',
           accent: {
             bar: 'from-blue-500 to-cyan-400',
-            badge: 'border-blue-500/30 bg-blue-500/10 text-blue-400',
+            badge: 'border-blue-500/30 bg-blue-500/10 text-blue-600',
           },
         },
       ]
     : [];
   return (
     <section>
-      <h2 className="mb-6 text-2xl font-extrabold tracking-tight text-white">Gamification</h2>
+      <h2 className="mb-6 text-2xl font-extrabold tracking-tight text-slate-900">Gamification</h2>
 
-      {error && <p className="mb-4 rounded-lg bg-red-950/50 px-3 py-2 text-sm text-red-400">{error}</p>}
+      {error && <p className="mb-4 rounded-lg bg-red-50 border border-red-100 px-3 py-2 text-sm text-red-600">{error}</p>}
 
       {/* Streaks */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -403,15 +403,15 @@ export default function ClientGamification({ clientId }) {
       </div>
 
       {/* Heatmap */}
-      <div className="mt-6 rounded-2xl border border-slate-700/80 bg-slate-800/90 p-5 shadow-sm">
-        <h3 className="mb-1 text-xl font-extrabold tracking-tight text-white">Workout calendar</h3>
-        <p className="text-xs text-slate-400 mb-4">Sets logged per day, over the last six months.</p>
+      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <h3 className="mb-1 text-xl font-extrabold tracking-tight text-slate-900">Workout calendar</h3>
+        <p className="text-xs text-slate-500 mb-4">Sets logged per day, over the last six months.</p>
         <Heatmap heatmap={heatmap} />
       </div>
 
       {/* Badges */}
-      <div className="mt-6 rounded-2xl border border-slate-700/80 bg-slate-800/90 p-5 shadow-sm">
-        <h3 className="mb-4 text-xl font-extrabold tracking-tight text-white">Achievements</h3>
+      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <h3 className="mb-4 text-xl font-extrabold tracking-tight text-slate-900">Achievements</h3>
         <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {badges.map((b) => (
             <BadgeTile key={b.id} badge={b} />
@@ -420,23 +420,23 @@ export default function ClientGamification({ clientId }) {
       </div>
 
       {/* Milestones */}
-      <div className="mt-6 rounded-2xl border border-slate-700/80 bg-slate-800/90 p-5 shadow-sm">
+      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="flex items-center justify-between gap-3 mb-4">
           <div>
-            <h3 className="text-xl font-extrabold tracking-tight text-white">Milestones</h3>
-            <p className="text-xs text-slate-400 mt-1">
+            <h3 className="text-xl font-extrabold tracking-tight text-slate-900">Milestones</h3>
+            <p className="text-xs text-slate-500 mt-1">
               Coach-set targets with live progress toward them.
             </p>
           </div>
           <button
             onClick={() => openModal(null)}
-            className="shrink-0 rounded-lg bg-gradient-to-b from-blue-500 to-blue-600 px-4 py-2 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:from-blue-400 hover:to-blue-500 hover:shadow-xl"
+            className="shrink-0 rounded-lg bg-slate-900 px-4 py-2 text-sm font-bold text-white shadow-sm transition-all hover:bg-slate-800 hover:shadow-xl"
           >
             Add target
           </button>
         </div>
         {milestones.length === 0 ? (
-          <p className="mt-3 rounded-xl border border-dashed border-slate-700/80 px-3 py-4 text-center text-sm text-slate-400">
+          <p className="mt-3 rounded-xl border border-dashed border-slate-200 px-3 py-4 text-center text-sm text-slate-500">
             No targets set yet — add a body-weight or lift target to track.
           </p>
         ) : (

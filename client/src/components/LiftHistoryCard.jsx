@@ -12,16 +12,16 @@ function fmtDate(iso) {
 
 function Delta({ delta }) {
   if (delta === null) return <span className="text-slate-500">—</span>;
-  if (delta > 0) return <span className="font-medium text-emerald-400">▲ +{delta} kg</span>;
-  if (delta < 0) return <span className="font-medium text-red-400">▼ {Math.abs(delta)} kg</span>;
+  if (delta > 0) return <span className="font-medium text-emerald-600">▲ +{delta} kg</span>;
+  if (delta < 0) return <span className="font-medium text-red-600">▼ {Math.abs(delta)} kg</span>;
   return <span className="text-slate-500">=</span>;
 }
 
 export default function LiftHistoryCard({ liftHistory }) {
   if (liftHistory.length === 0) {
     return (
-      <div className="rounded-2xl bg-slate-800 p-4">
-        <h3 className="font-semibold text-slate-300">Progressive overload &amp; PRs</h3>
+      <div className="rounded-2xl bg-white p-4">
+        <h3 className="font-semibold text-slate-600">Progressive overload &amp; PRs</h3>
         <p className="mt-2 text-sm text-slate-500">
           Log a few workouts and each lift&apos;s progression will show up here.
         </p>
@@ -30,8 +30,8 @@ export default function LiftHistoryCard({ liftHistory }) {
   }
 
   return (
-    <div className="rounded-2xl bg-slate-800 p-4">
-      <h3 className="font-semibold text-slate-300">Progressive overload &amp; PRs</h3>
+    <div className="rounded-2xl bg-white p-4">
+      <h3 className="font-semibold text-slate-600">Progressive overload &amp; PRs</h3>
       <p className="mt-1 text-xs text-slate-500">
         Best set per session; the arrow compares it with the session before.
       </p>
@@ -39,9 +39,9 @@ export default function LiftHistoryCard({ liftHistory }) {
       {liftHistory.map((exercise) => (
         <div key={exercise.id} className="mt-4">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="font-medium text-slate-200">{exercise.name}</span>
+            <span className="font-medium text-slate-700">{exercise.name}</span>
             {exercise.category && (
-              <span className="rounded-full bg-slate-700/60 px-2 py-0.5 text-xs text-slate-400">
+              <span className="rounded-full bg-slate-100/60 px-2 py-0.5 text-xs text-slate-500">
                 {exercise.category}
               </span>
             )}
@@ -73,20 +73,20 @@ export default function LiftHistoryCard({ liftHistory }) {
                     bgClass = 'bg-amber-500/10';
                   } else if (delta > 0) {
                     // subtle up intensity
-                    bgClass = 'bg-emerald-500/[0.03] hover:bg-emerald-500/[0.06]';
+                    bgClass = 'bg-emerald-500/[0.03] hover:bg-slate-800/[0.06]';
                   } else if (delta < 0) {
                     // subtle down intensity
                     bgClass = 'bg-red-500/[0.03] hover:bg-red-500/[0.06]';
                   }
                   
                   return (
-                    <tr key={h.session_id} className={`border-t border-slate-700/50 transition-colors whitespace-nowrap ${bgClass}`}>
-                      <td className="py-2.5 sm:py-1.5 pr-3 text-slate-300">{fmtDate(h.date)}</td>
-                      <td className="py-2.5 sm:py-1.5 pr-3 text-slate-200">
+                    <tr key={h.session_id} className={`border-t border-slate-200/50 transition-colors whitespace-nowrap ${bgClass}`}>
+                      <td className="py-2.5 sm:py-1.5 pr-3 text-slate-600">{fmtDate(h.date)}</td>
+                      <td className="py-2.5 sm:py-1.5 pr-3 text-slate-700">
                         {h.weight} kg × {h.reps}
-                        {isPr && <span className="ml-1.5 rounded text-[10px] font-bold uppercase text-amber-400 drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]">PR</span>}
+                        {isPr && <span className="ml-1.5 rounded text-[10px] font-bold uppercase text-amber-600 drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]">PR</span>}
                       </td>
-                      <td className="py-2.5 sm:py-1.5 pr-3 text-slate-400">{h.est_1rm} kg</td>
+                      <td className="py-2.5 sm:py-1.5 pr-3 text-slate-500">{h.est_1rm} kg</td>
                       <td className="py-2.5 sm:py-1.5">
                         <Delta delta={delta} />
                       </td>

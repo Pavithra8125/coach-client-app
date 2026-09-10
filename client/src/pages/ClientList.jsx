@@ -73,68 +73,68 @@ export default function ClientList() {
     <AppShell>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Clients</h1>
-          <p className="text-sm text-slate-400">
+          <h1 className="text-2xl font-bold text-slate-900">Clients</h1>
+          <p className="text-sm text-slate-500">
             {clients.length} {clients.length === 1 ? 'client' : 'clients'}
           </p>
         </div>
         <button
           onClick={openAdd}
-          className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500"
+          className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
         >
           + Add client
         </button>
       </div>
 
-      {error && <p className="mb-4 text-sm text-red-400">{error}</p>}
+      {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
 
       {loading ? (
-        <p className="text-slate-400">Loading…</p>
+        <p className="text-slate-500">Loading…</p>
       ) : clients.length === 0 ? (
-        <div className="rounded-2xl bg-slate-800 p-8 text-center text-slate-400">
+        <div className="rounded-xl bg-white shadow-sm p-8 text-center text-slate-500">
           No clients yet — add your first one.
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {clients.map((client) => (
-            <div key={client.id} className="rounded-2xl bg-slate-800 p-4">
+            <div key={client.id} className="rounded-xl bg-white shadow-sm border border-slate-100 p-4">
               <div className="flex items-start gap-3">
                 {client.photo_url ? (
                   <img
                     src={client.photo_url}
                     alt=""
-                    className="h-12 w-12 rounded-full bg-slate-700 object-cover"
+                    className="h-12 w-12 rounded-full bg-slate-100 object-cover ring-2 ring-slate-50"
                   />
                 ) : (
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-700 text-sm font-semibold text-slate-400">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-800 ring-2 ring-slate-200/50">
                     {initials(client.name)}
                   </div>
                 )}
                 <div className="min-w-0">
                   <Link
                     to={`/clients/${client.id}`}
-                    className="block truncate font-semibold transition hover:text-emerald-400"
+                    className="block truncate text-slate-900 font-semibold transition hover:text-slate-600"
                   >
                     {client.name}
                   </Link>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-slate-400">
                     {client.start_date ? `Since ${client.start_date}` : 'No start date'}
                   </p>
                   {client.goals && (
-                    <p className="mt-1 truncate text-sm text-slate-400">{client.goals}</p>
+                    <p className="mt-1 truncate text-sm text-slate-600">{client.goals}</p>
                   )}
                 </div>
               </div>
               <div className="mt-3 flex justify-end gap-2">
                 <button
                   onClick={() => openEdit(client)}
-                  className="rounded-lg border border-slate-700 px-3 py-1.5 text-xs text-slate-300 transition hover:bg-slate-700"
+                  className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-900"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => handleDelete(client)}
-                  className="rounded-lg border border-red-900 px-3 py-1.5 text-xs text-red-400 transition hover:bg-red-950"
+                  className="rounded-lg border border-red-200 bg-white px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-50 hover:text-red-700"
                 >
                   Delete
                 </button>

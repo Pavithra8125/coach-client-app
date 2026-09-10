@@ -4,9 +4,9 @@
 import { useState } from 'react';
 
 const fieldCls =
-  'mt-1 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 ' +
+  'mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 ' +
   'placeholder:text-slate-500 focus:border-slate-500 focus:outline-none';
-const labelCls = 'block text-xs font-medium text-slate-400';
+const labelCls = 'block text-xs font-medium text-slate-600';
 
 export default function MilestoneModal({ milestone, exercises, onSave, onClose }) {
   const [form, setForm] = useState(() => ({
@@ -43,8 +43,8 @@ export default function MilestoneModal({ milestone, exercises, onSave, onClose }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-      <div className="w-full max-w-md rounded-2xl bg-slate-800 p-5">
-        <h3 className="text-lg font-semibold text-slate-200">
+      <div className="w-full max-w-md rounded-2xl bg-slate-50 p-5">
+        <h3 className="text-lg font-semibold text-slate-900">
           {milestone ? 'Edit target' : 'New target'}
         </h3>
         <form onSubmit={handleSubmit} className="mt-4 space-y-3">
@@ -127,20 +127,20 @@ export default function MilestoneModal({ milestone, exercises, onSave, onClose }
             </p>
           )}
 
-          {error && <p className="text-sm text-red-400">{error}</p>}
+          {error && <p className="text-sm text-red-600">{error}</p>}
 
           <div className="flex justify-end gap-2 pt-1">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-slate-600 px-4 py-2 text-sm text-slate-300 transition hover:bg-slate-700"
+              className="rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-600 transition hover:bg-slate-100"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {saving ? 'Saving…' : 'Save target'}
             </button>

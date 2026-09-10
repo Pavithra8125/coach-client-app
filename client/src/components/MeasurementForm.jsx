@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
-const labelCls = 'block text-xs font-medium text-slate-400';
-const fieldCls = 'w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2.5 sm:py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-slate-500 focus:outline-none';
+const labelCls = 'block text-xs font-medium text-slate-500';
+const fieldCls = 'w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 sm:py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-500 focus:outline-none';
 
 function todayStr() {
   const d = new Date();
@@ -37,7 +37,7 @@ export default function MeasurementForm({ initialData, onSubmit, onCancel }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 rounded-xl border border-slate-700 bg-slate-800 p-5 shadow-sm">
+    <form onSubmit={handleSubmit} className="space-y-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className={labelCls} htmlFor="m-date">Date</label>
@@ -118,14 +118,14 @@ export default function MeasurementForm({ initialData, onSubmit, onCancel }) {
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-xl px-5 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-700 hover:text-white"
+            className="rounded-xl px-5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
           >
             Cancel
           </button>
         )}
         <button
           type="submit"
-          className="rounded-xl bg-gradient-to-b from-blue-500 to-blue-600 px-5 py-2 text-sm font-bold text-white shadow-lg transition hover:-translate-y-0.5 hover:from-blue-400 hover:to-blue-500"
+          className="rounded-xl bg-slate-900 px-5 py-2 text-sm font-bold text-white shadow-sm transition transition hover:bg-slate-800"
         >
           {initialData ? 'Save Changes' : 'Log Measurement'}
         </button>

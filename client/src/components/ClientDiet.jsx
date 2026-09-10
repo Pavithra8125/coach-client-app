@@ -92,15 +92,15 @@ export default function ClientDiet({ clientId }) {
   }
 
   if (loading) {
-    return <p className="mt-8 text-slate-400">Loading diet…</p>;
+    return <p className="mt-8 text-slate-500">Loading diet…</p>;
   }
 
   return (
     <section>
       <div className="mb-6 flex items-center justify-between gap-3">
-        <h2 className="text-2xl font-extrabold tracking-tight text-white">Diet</h2>
+        <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">Diet</h2>
         <div className="flex items-center gap-2">
-          <label htmlFor="diet-track-date" className="text-xs font-medium text-slate-400">
+          <label htmlFor="diet-track-date" className="text-xs font-medium text-slate-500">
             Track date
           </label>
           <input
@@ -108,12 +108,12 @@ export default function ClientDiet({ clientId }) {
             type="date"
             value={trackDate}
             onChange={(e) => setTrackDate(e.target.value)}
-            className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm text-slate-100 focus:border-slate-500 focus:outline-none"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-900 focus:border-slate-500 focus:outline-none"
           />
         </div>
       </div>
 
-      {error && <p className="mb-4 rounded-lg bg-red-950/50 px-3 py-2 text-sm text-red-400">{error}</p>}
+      {error && <p className="mb-4 rounded-lg bg-red-50 border border-red-100 px-3 py-2 text-sm text-red-600">{error}</p>}
 
       <div className="grid gap-4 lg:grid-cols-2">
         <MealPlanCard mealPlan={mealPlan} onSave={handleSavePlan} onDelete={handleDeletePlan} />

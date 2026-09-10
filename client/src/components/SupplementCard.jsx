@@ -4,7 +4,7 @@
 import { useState } from 'react';
 
 const inputCls =
-  'flex-1 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 ' +
+  'flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 ' +
   'placeholder:text-slate-500 focus:border-slate-500 focus:outline-none';
 
 export default function SupplementCard({ supplements, taken, onSetTaken, onAdd, onDelete }) {
@@ -41,8 +41,8 @@ export default function SupplementCard({ supplements, taken, onSetTaken, onAdd, 
   }
 
   return (
-    <div className="rounded-2xl bg-slate-800 p-4">
-      <h3 className="font-semibold text-slate-300">Supplements</h3>
+    <div className="rounded-2xl bg-white p-4">
+      <h3 className="font-semibold text-slate-600">Supplements</h3>
 
       <ul className="mt-3 space-y-1.5">
         {supplements.length === 0 ? (
@@ -53,7 +53,7 @@ export default function SupplementCard({ supplements, taken, onSetTaken, onAdd, 
             return (
               <li
                 key={supp.id}
-                className="flex items-center justify-between gap-2 rounded-xl border border-slate-700/60 px-3 py-2"
+                className="flex items-center justify-between gap-2 rounded-xl border border-slate-200/60 px-3 py-2"
               >
                 <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-2.5">
                   <input
@@ -61,16 +61,16 @@ export default function SupplementCard({ supplements, taken, onSetTaken, onAdd, 
                     checked={checked}
                     disabled={busy}
                     onChange={(e) => toggle(supp, e.target.checked)}
-                    className="h-4 w-4 accent-emerald-500"
+                    className="h-4 w-4 accent-slate-900"
                   />
-                  <span className={`truncate text-sm ${checked ? 'text-slate-500 line-through' : 'text-slate-200'}`}>
+                  <span className={`truncate text-sm ${checked ? 'text-slate-500 line-through' : 'text-slate-700'}`}>
                     {supp.name}
                   </span>
                 </label>
                 <button
                   type="button"
                   onClick={() => handleDelete(supp)}
-                  className="shrink-0 text-xs text-slate-600 transition hover:text-red-400"
+                  className="shrink-0 text-xs text-slate-600 transition hover:text-red-600"
                   aria-label={`Remove ${supp.name}`}
                 >
                   ×
@@ -92,12 +92,12 @@ export default function SupplementCard({ supplements, taken, onSetTaken, onAdd, 
         />
         <button
           type="submit"
-          className="rounded-lg border border-slate-600 px-3 py-2 text-sm text-slate-300 transition hover:bg-slate-700"
+          className="rounded-lg border border-slate-600 px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100"
         >
           Add
         </button>
       </form>
-      {error && <p className="mt-1 text-sm text-red-400">{error}</p>}
+      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
     </div>
   );
 }

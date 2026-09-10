@@ -10,10 +10,10 @@ import {
 } from 'recharts';
 import { smoothedWeights } from '../lib/trend.js';
 
-const SERIES = '#3987e5';
-const SURFACE = '#1e293b';
-const GRID = '#334155';
-const TICK = '#94a3b8';
+const SERIES = '#0f172a';
+const SURFACE = '#ffffff';
+const GRID = '#f1f5f9';
+const TICK = '#64748b';
 
 function fmtDate(iso) {
   return new Date(`${iso}T00:00:00`).toLocaleDateString(undefined, {
@@ -40,16 +40,16 @@ function ChartTooltip({ active, payload, label }) {
   const trend = payload.find((p) => p.dataKey === 'trend');
   const raw = payload.find((p) => p.dataKey === 'weight_kg');
   return (
-    <div className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm shadow-lg">
-      <p className="font-medium text-slate-200">{fmtDate(label)}</p>
+    <div className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-md">
+      <p className="font-medium text-slate-900">{fmtDate(label)}</p>
       {raw && raw.value != null && (
-        <p className="text-slate-400">
-          Logged <span className="font-semibold text-slate-100">{raw.value} kg</span>
+        <p className="text-slate-500">
+          Logged <span className="font-semibold text-slate-900">{raw.value} kg</span>
         </p>
       )}
       {trend && (
-        <p className="text-slate-400">
-          Trend <span className="font-semibold text-slate-100">{trend.value} kg</span>
+        <p className="text-slate-500">
+          Trend <span className="font-semibold text-slate-900">{trend.value} kg</span>
         </p>
       )}
     </div>
@@ -63,7 +63,7 @@ export default function TrendGraph({ measurements }) {
 
   if (chartData.length === 0) {
     return (
-      <div className="flex h-56 items-center justify-center rounded-xl border border-dashed border-slate-700 text-sm text-slate-500">
+      <div className="flex h-56 items-center justify-center rounded-xl border border-dashed border-slate-200 text-sm text-slate-400">
         No weights logged yet.
       </div>
     );
@@ -71,9 +71,9 @@ export default function TrendGraph({ measurements }) {
 
   return (
     <div className="w-full">
-      <div className="mb-2 flex items-center gap-4 text-xs text-slate-400">
+      <div className="mb-2 flex items-center gap-4 text-xs text-slate-500">
         <span className="flex items-center gap-1.5">
-          <span className="h-0.5 w-4 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400" />
+          <span className="h-0.5 w-4 rounded-full bg-gradient-to-r from-slate-600 to-slate-800" />
           Trend (EMA)
         </span>
         <span className="flex items-center gap-1.5">
@@ -85,8 +85,8 @@ export default function TrendGraph({ measurements }) {
         <ComposedChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
           <defs>
             <linearGradient id="trendGradient" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#3b82f6" />
-              <stop offset="100%" stopColor="#06b6d4" />
+              <stop offset="0%" stopColor="#334155" />
+              <stop offset="100%" stopColor="#0f172a" />
             </linearGradient>
           </defs>
           <CartesianGrid stroke={GRID} strokeWidth={1} vertical={false} />
@@ -94,7 +94,7 @@ export default function TrendGraph({ measurements }) {
             dataKey="logged_date"
             tickFormatter={tickDate}
             tick={{ fill: TICK, fontSize: 12 }}
-            axisLine={{ stroke: '#475569' }}
+            axisLine={{ stroke: '#e2e8f0' }}
             tickLine={false}
             minTickGap={28}
           />
@@ -107,7 +107,7 @@ export default function TrendGraph({ measurements }) {
           />
           <Tooltip
             content={<ChartTooltip />}
-            cursor={{ stroke: '#64748b', strokeWidth: 1 }}
+            cursor={{ stroke: '#cbd5e1', strokeWidth: 1 }}
           />
           <Line
             type="monotone"
@@ -117,7 +117,7 @@ export default function TrendGraph({ measurements }) {
             strokeLinecap="round"
             strokeLinejoin="round"
             dot={false}
-            activeDot={{ r: 5, fill: '#06b6d4', stroke: SURFACE, strokeWidth: 2 }}
+            activeDot={{ r: 5, fill: '#1e293b', stroke: SURFACE, strokeWidth: 2 }}
             isAnimationActive={false}
           />
           <Scatter dataKey="weight_kg" shape={rawDot} isAnimationActive={false} />

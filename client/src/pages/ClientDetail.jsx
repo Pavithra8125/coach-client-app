@@ -68,7 +68,7 @@ export default function ClientDetail() {
   if (error) {
     return (
       <AppShell>
-        <p className="text-red-400">{error}</p>
+        <p className="text-red-600">{error}</p>
       </AppShell>
     );
   }
@@ -84,40 +84,39 @@ export default function ClientDetail() {
   return (
     <AppShell>
       {/* HERO HEADER */}
-      <div className="relative mb-12 overflow-hidden rounded-3xl border border-slate-700/80 bg-slate-800/50 shadow-2xl">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-600/5 to-transparent mix-blend-overlay" />
+      <div className="relative mb-12 overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm">
         <div className="relative p-8 sm:p-10">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
             {client.photo_url ? (
               <img
                 src={client.photo_url}
                 alt=""
-                className="h-24 w-24 shrink-0 rounded-full border-4 border-slate-800 bg-slate-700 object-cover shadow-xl"
+                className="h-24 w-24 shrink-0 rounded-full border-4 border-white bg-slate-100 object-cover shadow-md ring-1 ring-slate-100"
               />
             ) : (
-              <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full border-4 border-slate-800 bg-gradient-to-br from-slate-700 to-slate-800 text-3xl font-extrabold text-slate-300 shadow-xl">
+              <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full border-4 border-white bg-gradient-to-br from-slate-100 to-slate-200 text-3xl font-extrabold text-slate-800 shadow-md ring-1 ring-slate-100">
                 {initials(client.name)}
               </div>
             )}
             
             <div className="min-w-0 flex-1">
-              <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">{client.name}</h1>
-              <p className="mt-2 text-base font-medium text-slate-400">
+              <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">{client.name}</h1>
+              <p className="mt-2 text-base font-medium text-slate-500">
                 {client.start_date ? `Training since ${client.start_date}` : 'New Client'}
               </p>
-              {client.goals && <p className="mt-3 max-w-2xl text-lg text-slate-300">{client.goals}</p>}
+              {client.goals && <p className="mt-3 max-w-2xl text-lg text-slate-600">{client.goals}</p>}
             </div>
 
             <div className="flex shrink-0 flex-col gap-3 sm:items-end">
               <button
                 onClick={() => setEditing(true)}
-                className="rounded-xl bg-gradient-to-b from-slate-600 to-slate-700 px-6 py-2.5 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:from-slate-500 hover:to-slate-600 hover:shadow-xl"
+                className="rounded-xl bg-slate-900 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-md"
               >
                 Edit Profile
               </button>
               <button
                 onClick={handleDelete}
-                className="rounded-xl bg-slate-900/50 px-6 py-2.5 text-sm font-bold text-red-400 border border-red-900/30 transition-all hover:bg-red-950/50 hover:text-red-300"
+                className="rounded-xl bg-white px-6 py-2.5 text-sm font-bold text-red-600 border border-red-200 transition-all hover:bg-red-50 hover:text-red-700"
               >
                 Delete Client
               </button>
@@ -125,41 +124,41 @@ export default function ClientDetail() {
           </div>
 
           {/* STAT STRIP - Visual layout as requested */}
-          <div className="mt-10 grid grid-cols-2 gap-4 rounded-2xl bg-slate-900/60 p-4 shadow-inner backdrop-blur-sm sm:grid-cols-4">
-            <div className="flex items-center gap-3 border-r border-slate-700/50 pr-4 last:border-0">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/10 text-xl shadow-sm border border-blue-500/20">
+          <div className="mt-10 grid grid-cols-2 gap-4 rounded-2xl bg-slate-50 border border-slate-100 p-4 sm:grid-cols-4">
+            <div className="flex items-center gap-3 border-r border-slate-200 pr-4 last:border-0">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-xl shadow-sm border border-blue-100">
                 ⚖️
               </div>
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Latest Wt</p>
-                <p className="text-xl font-extrabold text-white">-- <span className="text-sm font-medium text-slate-500">kg</span></p>
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Latest Wt</p>
+                <p className="text-xl font-extrabold text-slate-900">-- <span className="text-sm font-medium text-slate-500">kg</span></p>
               </div>
             </div>
-            <div className="flex items-center gap-3 border-r-0 sm:border-r border-slate-700/50 pr-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/10 text-xl shadow-sm border border-orange-500/20">
+            <div className="flex items-center gap-3 border-r-0 sm:border-r border-slate-200 pr-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-xl shadow-sm border border-orange-100">
                 🔥
               </div>
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Streak</p>
-                <p className="text-xl font-extrabold text-white">-- <span className="text-sm font-medium text-slate-500">days</span></p>
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Streak</p>
+                <p className="text-xl font-extrabold text-slate-900">-- <span className="text-sm font-medium text-slate-500">days</span></p>
               </div>
             </div>
-            <div className="flex items-center gap-3 border-r border-slate-700/50 pr-4 last:border-0">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10 text-xl shadow-sm border border-emerald-500/20">
+            <div className="flex items-center gap-3 border-r border-slate-200 pr-4 last:border-0">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-xl shadow-sm border border-emerald-100">
                 💪
               </div>
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-400">This Week</p>
-                <p className="text-xl font-extrabold text-white">-- <span className="text-sm font-medium text-slate-500">sessions</span></p>
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">This Week</p>
+                <p className="text-xl font-extrabold text-slate-900">-- <span className="text-sm font-medium text-slate-500">sessions</span></p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/10 text-xl shadow-sm border border-purple-500/20">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-50 text-xl shadow-sm border border-purple-100">
                 🎯
               </div>
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Macros</p>
-                <p className="text-xl font-extrabold text-white">On Track</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Macros</p>
+                <p className="text-xl font-extrabold text-slate-900">On Track</p>
               </div>
             </div>
           </div>

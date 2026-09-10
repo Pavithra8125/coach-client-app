@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 
 const inputCls =
-  'w-20 rounded-lg border border-slate-700 bg-slate-900 px-2 py-1.5 text-center text-sm text-slate-100 ' +
+  'w-20 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-center text-sm text-slate-900 ' +
   'focus:border-slate-500 focus:outline-none';
 
 export default function WaterCard({ water, onSet }) {
@@ -36,13 +36,13 @@ export default function WaterCard({ water, onSet }) {
   const current = water?.glasses ?? 0;
 
   return (
-    <div className="rounded-2xl bg-slate-800 p-4">
-      <h3 className="font-semibold text-slate-300">Water</h3>
+    <div className="rounded-2xl bg-white p-4">
+      <h3 className="font-semibold text-slate-600">Water</h3>
       <div className="mt-3 flex items-center gap-2">
         <button
           type="button"
           onClick={() => save(Math.max(0, current - 1))}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-600 text-lg text-slate-300 transition hover:bg-slate-700"
+          className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-600 text-lg text-slate-600 transition hover:bg-slate-100"
           aria-label="Remove a glass"
         >
           −
@@ -59,7 +59,7 @@ export default function WaterCard({ water, onSet }) {
           />
           <button
             type="submit"
-            className="rounded-lg border border-slate-600 px-3 py-1.5 text-sm text-slate-300 transition hover:bg-slate-700"
+            className="rounded-lg border border-slate-600 px-3 py-1.5 text-sm text-slate-600 transition hover:bg-slate-100"
           >
             Save
           </button>
@@ -67,7 +67,7 @@ export default function WaterCard({ water, onSet }) {
         <button
           type="button"
           onClick={() => save(current + 1)}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-600 text-lg text-slate-300 transition hover:bg-slate-700"
+          className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-600 text-lg text-slate-600 transition hover:bg-slate-100"
           aria-label="Add a glass"
         >
           +
@@ -76,7 +76,7 @@ export default function WaterCard({ water, onSet }) {
       <p className="mt-2 text-xs text-slate-500">
         {current === 0 ? 'No water logged yet.' : `${current} glass${current === 1 ? '' : 'es'} today`}
       </p>
-      {error && <p className="mt-1 text-sm text-red-400">{error}</p>}
+      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
     </div>
   );
 }

@@ -7,18 +7,18 @@ export default function AppShell({ children }) {
   const { user, logout } = useAuth();
 
   return (
-    <div className="min-h-screen bg-slate-950 bg-gradient-to-br from-slate-900 via-slate-950 to-black text-slate-100 font-sans">
-      <header className="flex items-center justify-between border-b border-slate-800/80 bg-slate-950/50 px-4 sm:px-6 py-4 backdrop-blur-md">
-        <Link to="/" className="text-xl font-extrabold tracking-tight transition hover:text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
+      <header className="flex items-center justify-between border-b border-slate-200 bg-white px-4 sm:px-6 py-4 shadow-sm">
+        <Link to="/" className="text-xl font-extrabold tracking-tight text-slate-900 transition hover:text-slate-700">
           Coach&apos;s Client App
         </Link>
         <div className="flex items-center gap-4">
-          <span className="hidden sm:inline text-sm text-slate-400">
-            Signed in as <span className="font-semibold text-slate-200">{user.username}</span>
+          <span className="hidden sm:inline text-sm text-slate-500">
+            Signed in as <span className="font-medium text-slate-900">{user.username}</span>
           </span>
           <button
             onClick={logout}
-            className="rounded-lg border border-slate-700/80 bg-slate-800/50 px-3 py-2 sm:py-1.5 text-sm font-medium text-slate-300 transition-all hover:bg-slate-700 hover:text-white"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 sm:py-1.5 text-sm font-medium text-slate-600 shadow-sm transition-all hover:bg-slate-50 hover:text-slate-900"
           >
             Log out
           </button>

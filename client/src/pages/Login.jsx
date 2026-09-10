@@ -32,16 +32,16 @@ export default function Login() {
   }
 
   const inputClass =
-    'mt-1 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 ' +
-    'placeholder-slate-500 outline-none focus:border-emerald-500';
+    'mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-slate-900 ' +
+    'placeholder-slate-500 outline-none focus:border-slate-500';
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-900 px-4">
-      <form onSubmit={handleSubmit} className="w-full max-w-sm rounded-2xl bg-slate-800 p-8 shadow-xl">
-        <h1 className="text-2xl font-bold text-slate-100">Coach&apos;s Client App</h1>
-        <p className="mb-6 mt-1 text-sm text-slate-400">Sign in to manage your clients.</p>
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+      <form onSubmit={handleSubmit} className="w-full max-w-sm rounded-2xl bg-white border border-slate-200 p-8 shadow-xl">
+        <h1 className="text-2xl font-bold text-slate-900">Coach&apos;s Client App</h1>
+        <p className="mb-6 mt-1 text-sm text-slate-500">Sign in to manage your clients.</p>
 
-        <label htmlFor="username" className="block text-sm font-medium text-slate-300">
+        <label htmlFor="username" className="block text-sm font-medium text-slate-600">
           Username
         </label>
         <input
@@ -54,7 +54,7 @@ export default function Login() {
           className={inputClass}
         />
 
-        <label htmlFor="password" className="mt-4 block text-sm font-medium text-slate-300">
+        <label htmlFor="password" className="mt-4 block text-sm font-medium text-slate-600">
           Password
         </label>
         <input
@@ -66,12 +66,12 @@ export default function Login() {
           className={inputClass}
         />
 
-        {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
+        {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
 
         <button
           type="submit"
           disabled={submitting}
-          className="mt-6 w-full rounded-lg bg-emerald-600 py-2 font-semibold text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-6 w-full rounded-lg bg-slate-900 py-2 font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {submitting ? 'Signing in…' : 'Sign in'}
         </button>

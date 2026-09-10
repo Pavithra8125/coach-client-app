@@ -9,9 +9,9 @@ import CoachLogCard from './CoachLogCard.jsx';
 
 function Metric({ label, value, unit }) {
   return (
-    <div className="rounded-xl border border-slate-700/60 px-2 py-1.5 text-center">
+    <div className="rounded-xl border border-slate-200/60 px-2 py-1.5 text-center">
       <div className="text-[11px] uppercase tracking-wide text-slate-500">{label}</div>
-      <div className="mt-0.5 text-sm font-semibold text-slate-100">
+      <div className="mt-0.5 text-sm font-semibold text-slate-900">
         {value != null ? `${value}${unit}` : '—'}
       </div>
     </div>
@@ -74,25 +74,25 @@ export default function ClientCheckins({ clientId }) {
   }
 
   if (loading) {
-    return <p className="mt-8 text-slate-400">Loading check-ins…</p>;
+    return <p className="mt-8 text-slate-500">Loading check-ins…</p>;
   }
 
   return (
     <section>
       <div className="mb-6 flex items-center justify-between gap-3">
-        <h2 className="text-2xl font-extrabold tracking-tight text-white">Check-ins &amp; coach's log</h2>
+        <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">Check-ins &amp; coach's log</h2>
       </div>
 
-      {error && <p className="mb-4 rounded-lg bg-red-950/50 px-3 py-2 text-sm text-red-400">{error}</p>}
+      {error && <p className="mb-4 rounded-lg bg-red-50 border border-red-100 px-3 py-2 text-sm text-red-600">{error}</p>}
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <div className="rounded-2xl bg-slate-800 p-4">
+        <div className="rounded-2xl bg-white p-4">
           <div className="flex items-center justify-between gap-2">
-            <h3 className="font-semibold text-slate-300">Weekly check-ins</h3>
+            <h3 className="font-semibold text-slate-600">Weekly check-ins</h3>
             <button
               type="button"
               onClick={() => setModal({})}
-              className="rounded-xl bg-gradient-to-b from-blue-500 to-blue-600 px-4 py-2 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:from-blue-400 hover:to-blue-500 hover:shadow-xl"
+              className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white shadow-sm transition-all hover:bg-slate-800 hover:shadow-xl"
             >
               New check-in
             </button>
@@ -103,21 +103,21 @@ export default function ClientCheckins({ clientId }) {
           ) : (
             <ul className="mt-3 space-y-3">
               {checkins.map((c) => (
-                <li key={c.id} className="rounded-xl border border-slate-700/60 p-3">
+                <li key={c.id} className="rounded-xl border border-slate-200/60 p-3">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-sm font-medium text-slate-200">{c.date}</span>
+                    <span className="text-sm font-medium text-slate-700">{c.date}</span>
                     <div className="flex gap-2">
                       <button
                         type="button"
                         onClick={() => setModal({ checkin: c })}
-                        className="text-xs text-slate-500 transition hover:text-slate-300"
+                        className="text-xs text-slate-500 transition hover:text-slate-600"
                       >
                         Edit
                       </button>
                       <button
                         type="button"
                         onClick={() => handleDeleteCheckin(c)}
-                        className="text-xs text-slate-500 transition hover:text-red-400"
+                        className="text-xs text-slate-500 transition hover:text-red-600"
                       >
                         Delete
                       </button>
@@ -129,7 +129,7 @@ export default function ClientCheckins({ clientId }) {
                     <Metric label="Sleep" value={c.sleep} unit="/10" />
                     <Metric label="Adhere" value={c.adherence} unit="%" />
                   </div>
-                  {c.notes && <p className="mt-2 text-sm text-slate-400">{c.notes}</p>}
+                  {c.notes && <p className="mt-2 text-sm text-slate-500">{c.notes}</p>}
                 </li>
               ))}
             </ul>

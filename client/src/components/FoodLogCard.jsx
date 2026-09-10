@@ -5,11 +5,11 @@ import { useState } from 'react';
 import { addFood, deleteFood } from '../api/diet.js';
 
 const fieldCls =
-  'w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2.5 sm:py-2 text-sm text-slate-100 ' +
+  'w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 sm:py-2 text-sm text-slate-900 ' +
   'placeholder:text-slate-500 focus:border-slate-500 focus:outline-none';
-const labelCls = 'block text-xs font-medium text-slate-400';
+const labelCls = 'block text-xs font-medium text-slate-500';
 const macroCls =
-  'w-full rounded-lg border border-slate-700 bg-slate-900 px-2 py-2.5 sm:py-1.5 text-sm text-slate-100 ' +
+  'w-full rounded-lg border border-slate-200 bg-white px-2 py-2.5 sm:py-1.5 text-sm text-slate-900 ' +
   'placeholder:text-slate-500 focus:border-slate-500 focus:outline-none';
 
 const MEALS = ['breakfast', 'lunch', 'dinner', 'snack'];
@@ -19,10 +19,10 @@ function fmtMacro(n) {
 }
 
 const TOTALS = [
-  { key: 'protein', label: 'Protein', unit: 'g', theme: { bar: 'from-blue-500 to-cyan-400', text: 'text-blue-400' } },
-  { key: 'carbs', label: 'Carbs', unit: 'g', theme: { bar: 'from-amber-500 to-yellow-400', text: 'text-amber-400' } },
-  { key: 'fat', label: 'Fat', unit: 'g', theme: { bar: 'from-purple-500 to-fuchsia-400', text: 'text-purple-400' } },
-  { key: 'calories', label: 'Calories', unit: 'kcal', theme: { bar: 'from-orange-500 to-red-400', text: 'text-orange-400' } },
+  { key: 'protein', label: 'Protein', unit: 'g', theme: { bar: 'from-blue-500 to-cyan-400', text: 'text-blue-600' } },
+  { key: 'carbs', label: 'Carbs', unit: 'g', theme: { bar: 'from-amber-500 to-yellow-400', text: 'text-amber-600' } },
+  { key: 'fat', label: 'Fat', unit: 'g', theme: { bar: 'from-purple-500 to-fuchsia-400', text: 'text-purple-600' } },
+  { key: 'calories', label: 'Calories', unit: 'kcal', theme: { bar: 'from-orange-500 to-red-400', text: 'text-orange-600' } },
 ];
 
 function TotalsRow({ totals, targets }) {
@@ -39,11 +39,11 @@ function TotalsRow({ totals, targets }) {
         }
 
         return (
-          <div key={row.key} className="group relative overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-800/90 p-3.5 text-center shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
+          <div key={row.key} className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-3.5 text-center shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
             <div className={`absolute left-0 right-0 top-0 h-1 bg-gradient-to-r ${row.theme.bar}`} />
             
-            <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">{row.label}</div>
-            <div className={`mt-1 text-2xl font-extrabold tracking-tight ${over ? row.theme.text : 'text-white'}`}>
+            <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">{row.label}</div>
+            <div className={`mt-1 text-2xl font-extrabold tracking-tight ${over ? row.theme.text : 'text-slate-900'}`}>
               {fmtMacro(value)}
             </div>
             
@@ -52,7 +52,7 @@ function TotalsRow({ totals, targets }) {
             </div>
 
             {target > 0 && (
-              <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-slate-900 border border-slate-700/50">
+              <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white border border-slate-200/50">
                 <div 
                   className={`h-full rounded-full bg-gradient-to-r ${row.theme.bar} transition-all duration-500 ease-out`} 
                   style={{ width: `${progress}%` }} 
@@ -124,15 +124,15 @@ export default function FoodLogCard({ clientId, date, entries, totals, targets, 
   const snacks = entries.filter((e) => !e.meal_label || !MEALS.includes(e.meal_label));
 
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-800/90 p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
-      <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-orange-500 to-red-500" />
-      <h3 className="mb-4 text-xl font-extrabold tracking-tight text-white">Food log</h3>
+    <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
+      <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-slate-600 to-slate-800" />
+      <h3 className="mb-4 text-xl font-extrabold tracking-tight text-slate-900">Food log</h3>
 
       <div className="mt-3">
         <TotalsRow totals={totals} targets={targets} />
       </div>
 
-      <form onSubmit={handleSubmit} className="mt-4 space-y-2 rounded-xl border border-slate-700/60 p-3">
+      <form onSubmit={handleSubmit} className="mt-4 space-y-2 rounded-xl border border-slate-200/60 p-3">
         <div className="grid gap-2 sm:grid-cols-[auto_1fr]">
           <div>
             <label className={labelCls} htmlFor="fl-meal">
@@ -196,11 +196,11 @@ export default function FoodLogCard({ clientId, date, entries, totals, targets, 
             />
           </div>
         </div>
-        {error && <p className="text-sm text-red-400">{error}</p>}
+        {error && <p className="text-sm text-red-600">{error}</p>}
         <button
           type="submit"
           disabled={saving}
-          className="w-full rounded-xl bg-gradient-to-b from-blue-500 to-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:from-blue-400 hover:to-blue-500 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+          className="w-full rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-slate-800 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
         >
           {saving ? 'Adding…' : 'Add food'}
         </button>
@@ -244,9 +244,9 @@ export default function FoodLogCard({ clientId, date, entries, totals, targets, 
 
 function FoodRow({ entry, onDelete }) {
   return (
-    <li className="flex items-center justify-between gap-3 rounded-xl border border-slate-700/60 px-3 py-2">
+    <li className="flex items-center justify-between gap-3 rounded-xl border border-slate-200/60 px-3 py-2">
       <div className="min-w-0">
-        <p className="truncate text-sm text-slate-200">{entry.food_name}</p>
+        <p className="truncate text-sm text-slate-700">{entry.food_name}</p>
         <p className="text-xs text-slate-500">
           {fmtMacro(entry.protein)}g P · {fmtMacro(entry.carbs)}g C · {fmtMacro(entry.fat)}g F ·{' '}
           {fmtMacro(entry.calories)} kcal
@@ -255,7 +255,7 @@ function FoodRow({ entry, onDelete }) {
       <button
         type="button"
         onClick={() => onDelete(entry)}
-        className="shrink-0 text-xs text-slate-600 transition hover:text-red-400"
+        className="shrink-0 text-xs text-slate-600 transition hover:text-red-600"
         aria-label={`Remove ${entry.food_name}`}
       >
         Remove

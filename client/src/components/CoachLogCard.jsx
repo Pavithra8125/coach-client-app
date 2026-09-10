@@ -32,9 +32,9 @@ export default function CoachLogCard({ notes, onAdd, onDelete }) {
   }
 
   return (
-    <div className="rounded-2xl bg-slate-800 p-4">
+    <div className="rounded-2xl bg-white p-4">
       <div className="flex items-center justify-between gap-2">
-        <h3 className="font-semibold text-slate-300">Coach's log</h3>
+        <h3 className="font-semibold text-slate-600">Coach's log</h3>
         <span className="text-xs text-slate-600">Private</span>
       </div>
 
@@ -44,44 +44,44 @@ export default function CoachLogCard({ notes, onAdd, onDelete }) {
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Private note about this client…"
-          className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2.5 sm:py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-slate-500 focus:outline-none"
+          className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 sm:py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-500 focus:outline-none"
         />
         <div className="flex items-center gap-2">
           <input
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="rounded-lg border border-slate-700 bg-slate-900 px-2 py-2 sm:py-1.5 text-sm text-slate-100 focus:border-slate-500 focus:outline-none"
+            className="rounded-lg border border-slate-200 bg-white px-2 py-2 sm:py-1.5 text-sm text-slate-900 focus:border-slate-300 focus:outline-none"
             aria-label="Note date"
           />
           <button
             type="submit"
             disabled={saving}
-            className="ml-auto rounded-lg bg-emerald-600 px-4 py-2 sm:py-1.5 text-sm font-medium text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="ml-auto rounded-lg bg-slate-900 px-4 py-2 sm:py-1.5 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {saving ? 'Adding…' : 'Add note'}
           </button>
         </div>
       </form>
-      {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
+      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
 
       {notes.length === 0 ? (
         <p className="mt-3 text-sm text-slate-500">No notes yet.</p>
       ) : (
         <ul className="mt-3 space-y-2">
           {notes.map((n) => (
-            <li key={n.id} className="rounded-xl border border-slate-700/60 p-3">
+            <li key={n.id} className="rounded-xl border border-slate-200/60 p-3">
               <div className="flex items-center justify-between gap-2">
                 <span className="text-xs font-medium text-slate-500">{n.date}</span>
                 <button
                   type="button"
                   onClick={() => onDelete(n.id)}
-                  className="text-xs text-slate-600 transition hover:text-red-400"
+                  className="text-xs text-slate-600 transition hover:text-red-600"
                 >
                   Delete
                 </button>
               </div>
-              <p className="mt-1 text-sm text-slate-300">{n.note}</p>
+              <p className="mt-1 text-sm text-slate-600">{n.note}</p>
             </li>
           ))}
         </ul>

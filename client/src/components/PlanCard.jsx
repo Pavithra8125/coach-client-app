@@ -3,13 +3,13 @@
 // managed from inside that modal.
 export default function PlanCard({ plan, onAddDay, onEditDay, onDeleteDay }) {
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-800/90 p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
-      <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-500" />
+    <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
+      <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-slate-600 to-slate-800" />
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xl font-extrabold tracking-tight text-white">Workout plan</h3>
+        <h3 className="text-xl font-extrabold tracking-tight text-slate-900">Workout plan</h3>
         <button
           onClick={onAddDay}
-          className="rounded-xl bg-gradient-to-b from-blue-500 to-blue-600 px-4 py-2 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:from-blue-400 hover:to-blue-500 hover:shadow-xl"
+          className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white shadow-sm transition-all hover:bg-slate-800 hover:shadow-xl"
         >
           Add day
         </button>
@@ -20,19 +20,19 @@ export default function PlanCard({ plan, onAddDay, onEditDay, onDeleteDay }) {
       ) : (
         <ul className="mt-3 space-y-3">
           {plan.map((day) => (
-            <li key={day.id} className="rounded-xl border border-slate-700/60 p-3">
+            <li key={day.id} className="rounded-xl border border-slate-200/60 p-3">
               <div className="flex items-center justify-between">
-                <span className="font-medium text-slate-200">{day.name}</span>
+                <span className="font-medium text-slate-700">{day.name}</span>
                 <div className="flex gap-3">
                   <button
                     onClick={() => onEditDay(day)}
-                    className="text-xs text-slate-500 transition hover:text-slate-300"
+                    className="text-xs text-slate-500 transition hover:text-slate-600"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => onDeleteDay(day)}
-                    className="text-xs text-slate-500 transition hover:text-red-400"
+                    className="text-xs text-slate-500 transition hover:text-red-600"
                   >
                     Delete
                   </button>
@@ -45,7 +45,7 @@ export default function PlanCard({ plan, onAddDay, onEditDay, onDeleteDay }) {
                   {day.exercises.map((exercise) => (
                     <li
                       key={exercise.id}
-                      className="rounded-full bg-slate-700/60 px-2.5 py-0.5 text-xs text-slate-300"
+                      className="rounded-full bg-slate-100/60 px-2.5 py-0.5 text-xs text-slate-600"
                     >
                       {exercise.name}
                       {exercise.category && (

@@ -15,8 +15,8 @@ function toForm(client) {
 }
 
 const inputClass =
-  'mt-1 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 ' +
-  'placeholder-slate-500 outline-none focus:border-emerald-500';
+  'mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-slate-900 ' +
+  'placeholder-slate-500 outline-none focus:border-slate-500';
 
 export default function ClientFormModal({ client, onClose, onSaved }) {
   const [form, setForm] = useState(client ? toForm(client) : emptyForm);
@@ -53,11 +53,11 @@ export default function ClientFormModal({ client, onClose, onSaved }) {
       <form
         onSubmit={handleSubmit}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md rounded-2xl bg-slate-800 p-6 shadow-xl"
+        className="w-full max-w-md rounded-2xl bg-slate-50 p-6 shadow-xl"
       >
-        <h2 className="text-xl font-bold text-slate-100">{isEdit ? 'Edit client' : 'Add client'}</h2>
+        <h2 className="text-xl font-bold text-slate-900">{isEdit ? 'Edit client' : 'Add client'}</h2>
 
-        <label htmlFor="client-name" className="mt-4 block text-sm font-medium text-slate-300">
+        <label htmlFor="client-name" className="mt-4 block text-sm font-medium text-slate-600">
           Name *
         </label>
         <input
@@ -69,7 +69,7 @@ export default function ClientFormModal({ client, onClose, onSaved }) {
           className={inputClass}
         />
 
-        <label htmlFor="client-photo" className="mt-4 block text-sm font-medium text-slate-300">
+        <label htmlFor="client-photo" className="mt-4 block text-sm font-medium text-slate-600">
           Photo URL
         </label>
         <input
@@ -81,7 +81,7 @@ export default function ClientFormModal({ client, onClose, onSaved }) {
           className={inputClass}
         />
 
-        <label htmlFor="client-goals" className="mt-4 block text-sm font-medium text-slate-300">
+        <label htmlFor="client-goals" className="mt-4 block text-sm font-medium text-slate-600">
           Goals
         </label>
         <textarea
@@ -93,7 +93,7 @@ export default function ClientFormModal({ client, onClose, onSaved }) {
           className={inputClass}
         />
 
-        <label htmlFor="client-start" className="mt-4 block text-sm font-medium text-slate-300">
+        <label htmlFor="client-start" className="mt-4 block text-sm font-medium text-slate-600">
           Start date
         </label>
         <input
@@ -104,20 +104,20 @@ export default function ClientFormModal({ client, onClose, onSaved }) {
           className={inputClass}
         />
 
-        {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
+        {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
 
         <div className="mt-6 flex justify-end gap-2">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-slate-700 px-4 py-2 text-sm text-slate-300 transition hover:bg-slate-700"
+            className="rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-600 transition hover:bg-slate-100"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={saving}
-            className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {saving ? 'Saving…' : isEdit ? 'Save changes' : 'Add client'}
           </button>

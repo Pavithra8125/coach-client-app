@@ -75,14 +75,14 @@ export default function ClientWorkouts({ clientId }) {
   }
 
   if (loading) {
-    return <p className="mt-8 text-slate-400">Loading workouts…</p>;
+    return <p className="mt-8 text-slate-500">Loading workouts…</p>;
   }
 
   return (
     <section>
-      <h2 className="mb-6 text-2xl font-extrabold tracking-tight text-white">Workouts</h2>
+      <h2 className="mb-6 text-2xl font-extrabold tracking-tight text-slate-900">Workouts</h2>
 
-      {error && <p className="mb-4 rounded-lg bg-red-950/50 px-3 py-2 text-sm text-red-400">{error}</p>}
+      {error && <p className="mb-4 rounded-lg bg-red-50 border border-red-100 px-3 py-2 text-sm text-red-600">{error}</p>}
 
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="lg:col-span-2">

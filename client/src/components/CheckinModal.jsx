@@ -4,9 +4,9 @@
 import { useState } from 'react';
 
 const fieldCls =
-  'mt-1 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2.5 sm:py-2 text-sm text-slate-100 ' +
+  'mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 sm:py-2 text-sm text-slate-900 ' +
   'placeholder:text-slate-500 focus:border-slate-500 focus:outline-none';
-const labelCls = 'block text-xs font-medium text-slate-400';
+const labelCls = 'block text-xs font-medium text-slate-500';
 
 function todayStr() {
   const d = new Date();
@@ -59,8 +59,8 @@ export default function CheckinModal({ checkin, onSave, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-      <div className="w-full max-w-md rounded-2xl bg-slate-800 p-5">
-        <h3 className="text-lg font-semibold text-slate-200">
+      <div className="w-full max-w-md rounded-2xl bg-white p-5">
+        <h3 className="text-lg font-semibold text-slate-700">
           {checkin ? `Edit check-in · ${checkin.date}` : 'New check-in'}
         </h3>
         <form onSubmit={handleSubmit} className="mt-4 space-y-3">
@@ -113,7 +113,7 @@ export default function CheckinModal({ checkin, onSave, onClose }) {
             />
           </div>
 
-          {error && <p className="text-sm text-red-400">{error}</p>}
+          {error && <p className="text-sm text-red-600">{error}</p>}
           <p className="text-xs text-slate-500">
             Saving a check-in replaces any earlier check-in on the same date.
           </p>
@@ -122,14 +122,14 @@ export default function CheckinModal({ checkin, onSave, onClose }) {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-slate-600 px-4 py-2 text-sm text-slate-300 transition hover:bg-slate-700"
+              className="rounded-lg border border-slate-600 px-4 py-2 text-sm text-slate-600 transition hover:bg-slate-100"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {saving ? 'Saving…' : 'Save check-in'}
             </button>

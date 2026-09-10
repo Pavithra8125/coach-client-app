@@ -19,12 +19,12 @@ function fmtDate(iso) {
 }
 
 const fieldCls =
-  'w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2.5 sm:py-2 text-sm text-slate-100 ' +
+  'w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 sm:py-2 text-sm text-slate-900 ' +
   'placeholder:text-slate-500 focus:border-slate-500 focus:outline-none';
 const setCls =
-  'w-20 rounded-lg border border-slate-700 bg-slate-900 px-2 py-2 sm:py-1.5 text-sm text-slate-100 ' +
+  'w-20 rounded-lg border border-slate-200 bg-white px-2 py-2 sm:py-1.5 text-sm text-slate-900 ' +
   'focus:border-slate-500 focus:outline-none';
-const labelCls = 'block text-xs font-medium text-slate-400';
+const labelCls = 'block text-xs font-medium text-slate-500';
 
 export default function LogCard({ clientId, plan, exercises, sessions, onSaved }) {
   const [date, setDate] = useState(todayStr());
@@ -154,9 +154,9 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
   const totalSets = sessions.reduce((n, s) => n + s.exercises.reduce((m, ex) => m + ex.sets.length, 0), 0);
 
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-800/90 p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
-      <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500" />
-      <h3 className="mb-4 text-xl font-extrabold tracking-tight text-white">Log workout</h3>
+    <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-600 hover:shadow-md">
+      <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-slate-600 to-slate-800" />
+      <h3 className="mb-4 text-xl font-extrabold tracking-tight text-slate-900">Log workout</h3>
 
       <form onSubmit={handleSubmit} className="space-y-3">
         <div className="flex flex-col sm:flex-row gap-3">
@@ -195,13 +195,13 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
         ) : null}
 
         {rows.map((row) => (
-          <div key={row.key} className="rounded-xl border border-slate-700/60 p-3">
+          <div key={row.key} className="rounded-xl border border-slate-200/60 p-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-slate-200">{exerciseName(row.exercise_id)}</span>
+              <span className="text-sm font-medium text-slate-700">{exerciseName(row.exercise_id)}</span>
               <button
                 type="button"
                 onClick={() => removeRow(row.key)}
-                className="text-xs text-slate-500 transition hover:text-red-400"
+                className="text-xs text-slate-500 transition hover:text-red-600"
               >
                 Remove
               </button>
@@ -238,7 +238,7 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
                     type="button"
                     onClick={() => removeSet(row.key, idx)}
                     disabled={row.sets.length === 1}
-                    className="text-xs text-slate-600 transition hover:text-red-400 disabled:opacity-30"
+                    className="text-xs text-slate-600 transition hover:text-red-600 disabled:opacity-30"
                     aria-label="Remove set"
                   >
                     ×
@@ -249,7 +249,7 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
             <button
               type="button"
               onClick={() => addSet(row.key)}
-              className="mt-2 text-xs text-blue-400 transition hover:text-blue-300"
+              className="mt-2 text-xs text-slate-600 transition hover:text-slate-400"
             >
               + Add set
             </button>
@@ -278,7 +278,7 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
           <button
             type="button"
             onClick={addManualExercise}
-            className="rounded-lg border border-slate-600 px-3 py-2 text-sm text-slate-300 transition hover:bg-slate-700"
+            className="rounded-lg border border-slate-600 px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100"
           >
             Add
           </button>
@@ -298,12 +298,12 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
           />
         </div>
 
-        {error && <p className="text-sm text-red-400">{error}</p>}
+        {error && <p className="text-sm text-red-600">{error}</p>}
 
         <button
           type="submit"
           disabled={saving}
-          className="w-full rounded-xl bg-gradient-to-b from-indigo-500 to-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:from-indigo-400 hover:to-indigo-500 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+          className="w-full rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
         >
           {saving ? 'Saving…' : 'Save workout'}
         </button>
@@ -313,7 +313,7 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
       </form>
 
       <div className="mt-5">
-        <h4 className="mb-2 text-sm font-semibold text-slate-300">
+        <h4 className="mb-2 text-sm font-semibold text-slate-600">
           Recent sessions{sessions.length > 0 ? ` (${totalSets} sets)` : ''}
         </h4>
         {sessions.length === 0 ? (
@@ -321,10 +321,10 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
         ) : (
           <ul className="space-y-2">
             {sessions.map((session) => (
-              <li key={session.id} className="rounded-xl border border-slate-700/60 p-3">
+              <li key={session.id} className="rounded-xl border border-slate-200/60 p-3">
                 <div className="flex items-center justify-between gap-2">
                   <div className="min-w-0">
-                    <p className="text-sm text-slate-200">{fmtDate(session.date)}</p>
+                    <p className="text-sm text-slate-700">{fmtDate(session.date)}</p>
                     <p className="truncate text-xs text-slate-500">
                       {session.day_name ?? 'Free session'} · {session.exercises.length}{' '}
                       exercise{session.exercises.length === 1 ? '' : 's'} ·{' '}
@@ -336,14 +336,14 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
                     <button
                       type="button"
                       onClick={() => loadSession(session)}
-                      className="text-xs text-slate-500 transition hover:text-slate-300"
+                      className="text-xs text-slate-500 transition hover:text-slate-600"
                     >
                       Load
                     </button>
                     <button
                       type="button"
                       onClick={() => handleDelete(session)}
-                      className="text-xs text-slate-500 transition hover:text-red-400"
+                      className="text-xs text-slate-500 transition hover:text-red-600"
                     >
                       Delete
                     </button>
