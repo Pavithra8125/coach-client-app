@@ -84,7 +84,7 @@ export default function ClientWorkouts({ clientId }) {
 
       {error && <p className="mb-4 rounded-lg bg-red-50 border border-red-100 px-3 py-2 text-sm text-red-600">{error}</p>}
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid items-start gap-4 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <PlanCard
             plan={plan}

@@ -1,6 +1,6 @@
 // Per-client progress panel (slice 3): unified weight and body measurements logging
 // with a smoothed EMA trend chart. Rendered inside ClientDetail.
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import {
   getMeasurements,
   createMeasurement,
@@ -26,6 +26,7 @@ export default function ClientProgress({ clientId }) {
   
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [editingEntry, setEditingEntry] = useState(null);
+  const formRef = useRef(null);
 
   const reload = useCallback(() => {
     return getMeasurements(clientId)
@@ -56,6 +57,9 @@ export default function ClientProgress({ clientId }) {
   const handleEdit = (entry) => {
     setEditingEntry(entry);
     setIsFormVisible(true);
+    setTimeout(() => {
+      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
   };
 
   const handleCancelForm = () => {
@@ -110,7 +114,7 @@ export default function ClientProgress({ clientId }) {
           </div>
           
           {isFormVisible && (
-            <div className="mb-6">
+            <div className="mb-6" ref={formRef}>
               <MeasurementForm 
                 initialData={editingEntry}
                 onSubmit={handleSubmit}

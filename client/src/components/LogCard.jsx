@@ -2,7 +2,7 @@
 // pre-fills its exercises; each exercise gets a dynamic list of weight×reps
 // sets. Saving is an upsert — saving again for the same date replaces that
 // day's session. Recent sessions can be loaded back into the form or deleted.
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { deleteSession, logSession } from '../api/workouts.js';
 
 function todayStr() {
@@ -34,6 +34,8 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
   const [notes, setNotes] = useState('');
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(8);
+  const formRef = useRef(null);
 
   const exerciseName = (id) => exercises.find((ex) => ex.id === id)?.name ?? 'Exercise';
 
@@ -48,6 +50,9 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
         sets: [{ weight: '', reps: '' }],
       }))
     );
+    setTimeout(() => {
+      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
   }
 
   function addManualExercise() {
@@ -103,6 +108,9 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
         sets: ex.sets.map((s) => ({ weight: String(s.weight), reps: String(s.reps) })),
       }))
     );
+    setTimeout(() => {
+      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
   }
 
   async function handleSubmit(e) {
@@ -319,39 +327,50 @@ export default function LogCard({ clientId, plan, exercises, sessions, onSaved }
         {sessions.length === 0 ? (
           <p className="text-sm text-slate-500">No sessions logged yet.</p>
         ) : (
-          <ul className="space-y-2">
-            {sessions.map((session) => (
-              <li key={session.id} className="rounded-xl border border-slate-200/60 p-3">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="min-w-0">
-                    <p className="text-sm text-slate-700">{fmtDate(session.date)}</p>
-                    <p className="truncate text-xs text-slate-500">
-                      {session.day_name ?? 'Free session'} · {session.exercises.length}{' '}
-                      exercise{session.exercises.length === 1 ? '' : 's'} ·{' '}
-                      {session.exercises.reduce((n, ex) => n + ex.sets.length, 0)} sets
-                      {session.notes ? ` — ${session.notes}` : ''}
-                    </p>
+          <>
+            <ul className="space-y-2">
+              {sessions.slice(0, visibleCount).map((session) => (
+                <li key={session.id} className="rounded-xl border border-slate-200/60 p-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-slate-700">{fmtDate(session.date)}</p>
+                      <p className="truncate text-xs text-slate-500">
+                        {session.day_name ?? 'Free session'} · {session.exercises.length}{' '}
+                        exercise{session.exercises.length === 1 ? '' : 's'} ·{' '}
+                        {session.exercises.reduce((n, ex) => n + ex.sets.length, 0)} sets
+                        {session.notes ? ` — ${session.notes}` : ''}
+                      </p>
+                    </div>
+                    <div className="flex shrink-0 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => loadSession(session)}
+                        className="text-xs font-medium text-slate-500 transition hover:text-slate-900"
+                      >
+                        Load
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(session)}
+                        className="text-xs font-medium text-slate-500 transition hover:text-red-600"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex shrink-0 gap-2">
-                    <button
-                      type="button"
-                      onClick={() => loadSession(session)}
-                      className="text-xs text-slate-500 transition hover:text-slate-600"
-                    >
-                      Load
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(session)}
-                      className="text-xs text-slate-500 transition hover:text-red-600"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+                </li>
+              ))}
+            </ul>
+            {visibleCount < sessions.length && (
+              <button
+                type="button"
+                onClick={() => setVisibleCount((c) => c + 8)}
+                className="mt-4 w-full rounded-xl border border-slate-200 py-2.5 text-sm font-bold text-slate-600 shadow-sm transition-all hover:bg-slate-50 hover:text-slate-900"
+              >
+                Load more
+              </button>
+            )}
+          </>
         )}
       </div>
     </div>
