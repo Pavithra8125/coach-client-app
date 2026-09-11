@@ -1,26 +1,44 @@
 # Coach's Client App
 
-A private, password-protected web app for a gym coach (single user) to manage his
-clients' diet plans, workout programs, and progress tracking in one place.
+A private, single-user web app built for a gym coach to manage his 
+clients' progress, workouts, diet, and check-ins — all in one place. 
+Built as a personal project.
 
-Built as a personal tool — core coaching features plus a light personal layer.
+## Screenshots
 
-See [docs/project-plan.md](docs/project-plan.md) for the full plan, and
-[CLAUDE.md](CLAUDE.md) for the context that guides every dev session.
+![Overview](docs/screenshots/overview.png)
+![Progress](docs/screenshots/progress.png)
+![Workouts](docs/screenshots/workouts.png)
 
-## Quick start
+## Features
 
-```bash
-npm install                              # installs deps for client + server workspaces
-cp server/.env.example server/.env       # set SESSION_SECRET + COACH_PASSWORD
-npm run seed -w server                   # creates the coach login account
-npm run dev                              # starts Express (port 4000) + Vite (port 5173)
-```
+- Client management (add/edit/delete client profiles)
+- Progress tracking with EMA-smoothed weight/measurement trend graphs
+- Workout logging with progressive-overload and PR tracking
+- Diet/macro tracking with daily food logging, water, and supplements
+- Weekly check-ins and a private coach's log
+- Gamification (built, currently feature-flagged off for a future release)
+- Mobile-first design: bottom tab bar on phone, sidebar-style navigation 
+  on desktop
+- Soft glassmorphism visual theme
 
-- API: http://localhost:4000/api (Vite proxies `/api` → the server)
-- App: http://localhost:5173 — sign in with the credentials from `server/.env`
+## Tech Stack
 
-## Status
+- **Frontend:** React, Vite, Tailwind CSS
+- **Backend:** Node.js, Express (ESM)
+- **Database:** Turso (hosted LibSQL/SQLite) via @libsql/client
+- **Auth:** express-session with bcrypt password hashing
+- **Deployment:** Render
 
-Slices 1 (login + auth) and 2 (client list + add/edit/delete profiles) are done.
-Next up: slice 3 (weight/measurement logging + trend graph).
+## Running Locally
+
+1. `npm install`
+2. Copy `server/.env.example` to `server/.env` and fill in your own values
+3. `npm run seed -w server` to create the coach account
+4. `npm run dev` to start client + server together
+5. Open http://localhost:5173
+
+## Notes
+
+This is a private, single-user tool built for one specific coach's 
+workflow — not a general-purpose or multi-tenant product.
